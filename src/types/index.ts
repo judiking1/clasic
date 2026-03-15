@@ -1,0 +1,50 @@
+export type Portfolio = {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  thumbnailUrl: string;
+  isFeatured: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PortfolioWithImages = Portfolio & {
+  images: PortfolioImage[];
+};
+
+export type PortfolioImage = {
+  id: string;
+  portfolioId: string;
+  imageUrl: string;
+  altText: string;
+  sortOrder: number;
+};
+
+export type Sample = {
+  id: string;
+  name: string;
+  brand: string;
+  colorCategory: string;
+  patternType: string;
+  imageUrl: string;
+  description: string;
+  createdAt: string;
+};
+
+export type Inquiry = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  inquiryType: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+};
+
+export type ActionResult = {
+  success: boolean;
+  error?: string;
+  data?: unknown;
+};
