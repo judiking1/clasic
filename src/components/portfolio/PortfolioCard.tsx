@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import type { PortfolioWithImages } from "@/types";
@@ -12,6 +13,7 @@ interface PortfolioCardProps {
 }
 
 export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
+  const router = useRouter();
   const categoryLabel =
     PORTFOLIO_CATEGORIES.find((c) => c.value === portfolio.category)?.label ||
     portfolio.category;
@@ -58,13 +60,17 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
 
           {/* Admin Edit Button */}
           {isAdmin && (
-            <Link
-              href={`/admin/portfolio/${portfolio.id}/edit`}
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                router.push(`/admin/portfolio/${portfolio.id}/edit`);
+              }}
               className="absolute right-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-md hover:bg-blue-700 transition-colors"
             >
               수정
-            </Link>
+            </button>
           )}
         </div>
 
