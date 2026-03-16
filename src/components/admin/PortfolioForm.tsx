@@ -42,9 +42,12 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
       formData.append("description", description);
       formData.append("isFeatured", String(isFeatured));
 
+      if (imageUrls.length > 0) {
+        formData.append("thumbnailUrl", imageUrls[0]);
+      }
       imageUrls.forEach((url, index) => {
-        formData.append("imageUrls[]", url);
-        formData.append("imageAlts[]", imageAlts[index] ?? "");
+        formData.append("imageUrls", url);
+        formData.append("imageAlts", imageAlts[index] ?? "");
       });
 
       let result;
