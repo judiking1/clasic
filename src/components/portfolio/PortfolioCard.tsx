@@ -8,9 +8,10 @@ import type { PortfolioWithImages } from "@/types";
 
 interface PortfolioCardProps {
   portfolio: PortfolioWithImages;
+  isAdmin?: boolean;
 }
 
-export function PortfolioCard({ portfolio }: PortfolioCardProps) {
+export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
   const categoryLabel =
     PORTFOLIO_CATEGORIES.find((c) => c.value === portfolio.category)?.label ||
     portfolio.category;
@@ -54,6 +55,17 @@ export function PortfolioCard({ portfolio }: PortfolioCardProps) {
           <span className="absolute left-3 top-3 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow-md">
             {categoryLabel}
           </span>
+
+          {/* Admin Edit Button */}
+          {isAdmin && (
+            <Link
+              href={`/admin/portfolio/${portfolio.id}/edit`}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-3 top-3 rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white shadow-md hover:bg-blue-700 transition-colors"
+            >
+              수정
+            </Link>
+          )}
         </div>
 
         {/* Content */}

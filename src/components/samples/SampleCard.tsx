@@ -1,14 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { SAMPLE_COLORS, SAMPLE_PATTERNS } from "@/lib/constants";
 import type { Sample } from "@/types";
 
 interface SampleCardProps {
   sample: Sample;
+  isAdmin?: boolean;
 }
 
-export function SampleCard({ sample }: SampleCardProps) {
+export function SampleCard({ sample, isAdmin }: SampleCardProps) {
   const colorLabel =
     SAMPLE_COLORS.find((c) => c.value === sample.colorCategory)?.label ||
     sample.colorCategory;
@@ -20,6 +22,14 @@ export function SampleCard({ sample }: SampleCardProps) {
     <div className="group overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md">
       {/* Image */}
       <div className="relative aspect-square overflow-hidden">
+        {isAdmin && (
+          <Link
+            href={`/admin/samples/${sample.id}/edit`}
+            className="absolute right-2 top-2 z-10 rounded-full bg-blue-600 px-2.5 py-1 text-[10px] font-semibold text-white shadow-md hover:bg-blue-700 transition-colors"
+          >
+            수정
+          </Link>
+        )}
         {sample.imageUrl ? (
           <Image
             src={sample.imageUrl}

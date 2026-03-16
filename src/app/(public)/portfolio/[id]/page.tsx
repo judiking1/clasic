@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { getPortfolio } from "@/actions/portfolio";
+import { checkIsAdmin } from "@/actions/auth";
 import { ImageCarousel } from "@/components/portfolio/ImageCarousel";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PortfolioDetailPageProps) {
 
 export default async function PortfolioDetailPage({ params }: PortfolioDetailPageProps) {
   const { id } = await params;
-  const portfolio = await getPortfolio(id);
+  const [portfolio, isAdmin] = await Promise.all([getPortfolio(id), checkIsAdmin()]);
 
   if (!portfolio) {
     notFound();
@@ -73,9 +74,19 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
                 {formatDate(portfolio.createdAt)}
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              {portfolio.title}
-            </h1>
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+                {portfolio.title}
+              </h1>
+              {isAdmin && (
+                <Link
+                  href={`/admin/portfolio/${portfolio.id}/edit`}
+                  className="shrink-0 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+                >
+                  수정
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Image Carousel */}

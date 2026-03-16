@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { Sample } from "@/types";
 import { SampleCard } from "./SampleCard";
+import { checkIsAdmin } from "@/actions/auth";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,6 +33,12 @@ interface SampleGridProps {
 }
 
 export function SampleGrid({ samples }: SampleGridProps) {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin);
+  }, []);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -40,7 +48,7 @@ export function SampleGrid({ samples }: SampleGridProps) {
     >
       {samples.map((sample) => (
         <motion.div key={sample.id} variants={itemVariants}>
-          <SampleCard sample={sample} />
+          <SampleCard sample={sample} isAdmin={isAdmin} />
         </motion.div>
       ))}
     </motion.div>

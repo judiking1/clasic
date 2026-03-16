@@ -6,11 +6,16 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { checkIsAdmin } from "@/actions/auth";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
+
+  const isHome = pathname === "/";
+  const useDarkText = !isHome || isScrolled;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -22,11 +27,15 @@ export default function Header() {
     setIsMobileOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin);
+  }, [pathname]);
+
   return (
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
+        useDarkText
           ? "bg-white/95 backdrop-blur-sm shadow-md"
           : "bg-transparent"
       )}
@@ -38,7 +47,7 @@ export default function Header() {
             <span
               className={cn(
                 "text-xl font-bold transition-colors lg:text-2xl",
-                isScrolled ? "text-primary" : "text-white"
+                useDarkText ? "text-primary" : "text-white"
               )}
             >
               {SITE_CONFIG.name}
@@ -53,7 +62,7 @@ export default function Header() {
                 href={item.href}
                 className={cn(
                   "relative text-sm font-medium transition-colors",
-                  isScrolled
+                  useDarkText
                     ? pathname === item.href
                       ? "text-accent"
                       : "text-primary hover:text-accent"
@@ -71,6 +80,20 @@ export default function Header() {
                 )}
               </Link>
             ))}
+
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={cn(
+                  "ml-2 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors",
+                  useDarkText
+                    ? "bg-gray-900 text-white hover:bg-gray-700"
+                    : "bg-white/20 text-white hover:bg-white/30"
+                )}
+              >
+                관리자
+              </Link>
+            )}
           </nav>
 
           {/* Mobile Menu Button */}
@@ -78,7 +101,7 @@ export default function Header() {
             onClick={() => setIsMobileOpen(!isMobileOpen)}
             className={cn(
               "flex h-10 w-10 items-center justify-center rounded-md lg:hidden",
-              isScrolled ? "text-primary" : "text-white"
+              useDarkText ? "text-primary" : "text-white"
             )}
             aria-label="메뉴"
           >
@@ -132,6 +155,15 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
+
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="mt-2 rounded-md bg-gray-900 px-4 py-3 text-center text-sm font-medium text-white"
+                >
+                  관리자 대시보드
+                </Link>
+              )}
             </nav>
           </motion.div>
         )}

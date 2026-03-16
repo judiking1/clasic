@@ -6,8 +6,16 @@ import {
   signToken,
   setAuthCookie,
   removeAuthCookie,
+  getAuthToken,
+  verifyToken,
 } from "@/lib/auth";
 import type { ActionResult } from "@/types";
+
+export async function checkIsAdmin(): Promise<boolean> {
+  const token = await getAuthToken();
+  if (!token) return false;
+  return verifyToken(token);
+}
 
 export async function loginAction(
   _prevState: ActionResult | null,

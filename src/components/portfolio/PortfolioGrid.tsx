@@ -1,8 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { PortfolioWithImages } from "@/types";
 import { PortfolioCard } from "./PortfolioCard";
+import { checkIsAdmin } from "@/actions/auth";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -31,6 +33,12 @@ interface PortfolioGridProps {
 }
 
 export function PortfolioGrid({ portfolios }: PortfolioGridProps) {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkIsAdmin().then(setIsAdmin);
+  }, []);
+
   return (
     <motion.div
       variants={containerVariants}
@@ -40,7 +48,7 @@ export function PortfolioGrid({ portfolios }: PortfolioGridProps) {
     >
       {portfolios.map((portfolio) => (
         <motion.div key={portfolio.id} variants={itemVariants}>
-          <PortfolioCard portfolio={portfolio} />
+          <PortfolioCard portfolio={portfolio} isAdmin={isAdmin} />
         </motion.div>
       ))}
     </motion.div>
