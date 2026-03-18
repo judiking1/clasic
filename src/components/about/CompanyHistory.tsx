@@ -1,7 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useTransform, useInView } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useElementScroll } from "@/lib/hooks";
 
 const milestones = [
   {
@@ -36,82 +38,88 @@ const milestones = [
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut" as const,
-    },
-  },
-};
-
 export function CompanyHistory() {
+  const { ref: sectionRef, scrollYProgress } = useElementScroll<HTMLElement>({
+    offset: ["start end", "end start"],
+  });
+
+  const lineHeight = useTransform(scrollYProgress, [0.1, 0.8], ["0%", "100%"]);
+
   return (
-    <section className="bg-gray-50 py-16 sm:py-20">
+    <section ref={sectionRef} className="bg-background py-20 sm:py-28">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-12 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
+        {/* Section header */}
+        <div className="mb-16 flex items-center gap-4">
+          <div className="h-px w-12 bg-accent" />
+          <span className="text-xs font-medium tracking-[0.3em] uppercase text-accent">
+            History
+          </span>
+        </div>
+        <h2 className="mb-16 text-3xl font-bold tracking-tight text-primary sm:text-4xl">
           회사 연혁
         </h2>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="relative"
-        >
-          {/* Timeline Line */}
-          <div className="absolute left-6 top-0 h-full w-0.5 bg-amber-200 sm:left-1/2 sm:-translate-x-px" />
+        <div className="relative">
+          {/* Timeline Line - scroll linked */}
+          <div className="absolute left-6 top-0 h-full w-px bg-border sm:left-1/2 sm:-translate-x-px">
+            <motion.div
+              className="w-full bg-accent origin-top"
+              style={{ height: lineHeight }}
+            />
+          </div>
 
           {milestones.map((milestone, index) => (
-            <motion.div
-              key={milestone.year}
-              variants={itemVariants}
-              className={cn(
-                "relative mb-10 flex items-start gap-6 last:mb-0",
-                "sm:gap-0",
-                index % 2 === 0 ? "sm:flex-row" : "sm:flex-row-reverse"
-              )}
-            >
-              {/* Timeline Dot */}
-              <div className="absolute left-6 z-10 flex h-3 w-3 -translate-x-1/2 items-center justify-center sm:left-1/2">
-                <div className="h-3 w-3 rounded-full bg-amber-500 ring-4 ring-amber-100" />
-              </div>
-
-              {/* Content */}
-              <div
-                className={cn(
-                  "ml-12 w-full rounded-xl bg-white p-5 shadow-sm sm:ml-0 sm:w-[calc(50%-2rem)]",
-                  index % 2 === 0 ? "sm:mr-auto sm:text-right" : "sm:ml-auto sm:text-left"
-                )}
-              >
-                <span className="mb-1 inline-block rounded-full bg-amber-100 px-3 py-0.5 text-xs font-bold text-amber-700">
-                  {milestone.year}
-                </span>
-                <h3 className="mt-2 text-lg font-bold text-gray-900">
-                  {milestone.title}
-                </h3>
-                <p className="mt-1 text-sm text-gray-600">
-                  {milestone.description}
-                </p>
-              </div>
-            </motion.div>
+            <MilestoneItem key={milestone.year} milestone={milestone} index={index} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
+  );
+}
+
+function MilestoneItem({ milestone, index }: { milestone: typeof milestones[number]; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+      className={cn(
+        "relative mb-12 flex items-start gap-6 last:mb-0",
+        "sm:gap-0",
+        index % 2 === 0 ? "sm:flex-row" : "sm:flex-row-reverse"
+      )}
+    >
+      {/* Timeline Dot */}
+      <div className="absolute left-6 z-10 flex h-3 w-3 -translate-x-1/2 items-center justify-center sm:left-1/2">
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={isInView ? { scale: 1 } : {}}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className="h-3 w-3 rounded-full bg-accent ring-4 ring-background"
+        />
+      </div>
+
+      {/* Content */}
+      <div
+        className={cn(
+          "ml-14 w-full rounded-xl border border-border bg-white p-6 transition-all duration-300 hover:border-accent/30 hover:shadow-md sm:ml-0 sm:w-[calc(50%-2.5rem)]",
+          index % 2 === 0 ? "sm:mr-auto sm:text-right" : "sm:ml-auto sm:text-left"
+        )}
+      >
+        <span className="mb-2 inline-block text-2xl font-black text-accent">
+          {milestone.year}
+        </span>
+        <h3 className="text-lg font-bold text-primary">
+          {milestone.title}
+        </h3>
+        <p className="mt-1 text-sm text-secondary">
+          {milestone.description}
+        </p>
+      </div>
+    </motion.div>
   );
 }

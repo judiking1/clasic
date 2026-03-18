@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { SAMPLE_COLORS } from "@/lib/constants";
 
@@ -23,31 +24,29 @@ export function SampleFilter({ currentColor }: SampleFilterProps) {
     router.push(query ? `/samples?${query}` : "/samples");
   };
 
+  const allItems = [{ value: "all", label: "전체" }, ...SAMPLE_COLORS];
+
   return (
-    <div className="mb-8 flex flex-wrap justify-center gap-2">
-      <button
-        onClick={() => handleColorChange("all")}
-        className={cn(
-          "rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
-          currentColor === "all"
-            ? "bg-amber-500 text-white shadow-md shadow-amber-200"
-            : "bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-        )}
-      >
-        전체
-      </button>
-      {SAMPLE_COLORS.map((color) => (
+    <div className="mb-12 flex flex-wrap justify-center gap-2">
+      {allItems.map((color) => (
         <button
           key={color.value}
           onClick={() => handleColorChange(color.value)}
           className={cn(
-            "rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+            "relative rounded-full px-5 py-2 text-sm font-medium transition-all duration-300",
             currentColor === color.value
-              ? "bg-amber-500 text-white shadow-md shadow-amber-200"
-              : "bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+              ? "bg-primary text-white"
+              : "bg-transparent text-secondary hover:text-primary border border-border hover:border-primary/30"
           )}
         >
-          {color.label}
+          {currentColor === color.value && (
+            <motion.div
+              layoutId="sample-filter-bg"
+              className="absolute inset-0 rounded-full bg-primary"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          <span className="relative z-10">{color.label}</span>
         </button>
       ))}
     </div>

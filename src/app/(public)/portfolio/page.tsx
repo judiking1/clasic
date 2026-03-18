@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import { getPortfolios } from "@/actions/portfolio";
 import { CategoryFilter } from "@/components/portfolio/CategoryFilter";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import PageHero from "@/components/ui/PageHero";
 
 export const metadata = {
   title: "시공사례",
@@ -21,23 +22,20 @@ export default async function PortfolioPage({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 pt-20 lg:pt-24">
-        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">
-              시공사례
-            </h1>
-            <p className="mt-3 text-lg text-gray-600">
-              정성을 다해 시공한 인조대리석 작업물을 확인해보세요
-            </p>
-          </div>
+      <main className="min-h-screen bg-background">
+        <PageHero
+          label="Portfolio"
+          title="시공사례"
+          description="정성을 다해 시공한 인조대리석 작업물을 확인해보세요"
+        />
 
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
           <CategoryFilter currentCategory={category} />
 
           {portfolios.length > 0 ? (
             <PortfolioGrid portfolios={portfolios} />
           ) : (
-            <div className="py-20 text-center text-gray-500">
+            <div className="py-20 text-center text-secondary">
               <p className="text-lg">등록된 시공사례가 없습니다.</p>
             </div>
           )}

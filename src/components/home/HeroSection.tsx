@@ -2,192 +2,227 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useElementScroll } from "@/lib/hooks";
+import MagneticButton from "@/components/ui/MagneticButton";
 
-const MarbleHero = dynamic(
-  () => import("@/components/three/MarbleHero"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="absolute inset-0 bg-stone-950">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-12 w-12 animate-spin rounded-full border-2 border-stone-700 border-t-stone-300" />
-        </div>
-      </div>
-    ),
-  }
+const MarbleBackground = dynamic(
+  () => import("@/components/three/MarbleBackground"),
+  { ssr: false }
 );
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 30 },
+const charVariants = {
+  hidden: { y: "100%", opacity: 0 },
   visible: (i: number) => ({
+    y: "0%",
     opacity: 1,
-    y: 0,
     transition: {
-      delay: 0.3 + i * 0.15,
+      delay: 0.8 + i * 0.05,
       duration: 0.8,
       ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
     },
   }),
 };
 
-const staggerContainer = {
-  hidden: {},
-  visible: {
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.3,
+      delay,
+      duration: 0.8,
+      ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
+    },
+  }),
+};
+
+const lineExpand = {
+  hidden: { scaleX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: {
+      delay: 1.5,
+      duration: 1,
+      ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
     },
   },
 };
 
 export default function HeroSection() {
+  const { ref: sectionRef, scrollYProgress } = useElementScroll<HTMLElement>({
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+
+  const title = "클래식";
+
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-stone-950">
-      {/* 3D Canvas */}
-      <div className="absolute inset-0">
-        <MarbleHero />
-      </div>
+    <section
+      ref={sectionRef}
+      className="relative h-[110vh] w-full overflow-hidden bg-primary"
+    >
+      {/* Animated marble shader background */}
+      <motion.div className="absolute inset-0 opacity-30" style={{ y }}>
+        <MarbleBackground />
+      </motion.div>
 
-      {/* Dark gradient overlay for text readability */}
-      <div
-        className={cn(
-          "absolute inset-0 z-10",
-          "bg-gradient-to-t from-stone-950 via-stone-950/60 to-transparent"
-        )}
-      />
+      {/* Radial gradient overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(10,10,10,0.7)_70%,rgba(10,10,10,0.95)_100%)]" />
 
-      {/* Top subtle gradient */}
-      <div className="absolute inset-x-0 top-0 z-10 h-32 bg-gradient-to-b from-stone-950/40 to-transparent" />
+      {/* Accent glow */}
+      <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 h-[40vh] w-[40vh] rounded-full bg-accent/10 blur-[120px]" />
 
-      {/* Content overlay */}
+      {/* Content */}
       <motion.div
-        className="relative z-20 flex h-full flex-col items-center justify-end pb-20 sm:pb-28 md:pb-32"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
+        className="relative z-20 flex h-full flex-col items-center justify-center"
+        style={{ opacity, scale }}
       >
-        {/* Company badge */}
+        {/* Badge */}
         <motion.div
-          custom={0}
-          variants={fadeInUp}
-          className="mb-4 rounded-full border border-stone-500/30 bg-stone-900/50 px-4 py-1.5 backdrop-blur-sm"
+          custom={0.5}
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          className="mb-8"
         >
-          <span className="text-xs font-medium tracking-widest text-stone-300 sm:text-sm">
-            인조대리석 전문
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-glow" />
+            <span className="text-xs font-medium tracking-[0.3em] text-white/70 uppercase">
+              Artificial Marble Specialist
+            </span>
           </span>
         </motion.div>
 
-        {/* Company name */}
-        <motion.h1
-          custom={1}
-          variants={fadeInUp}
-          className="mb-4 text-center text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
-        >
-          클래식
-        </motion.h1>
+        {/* Main title - character split animation */}
+        <div className="overflow-hidden mb-2">
+          <motion.h1
+            className="flex text-[15vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] font-black leading-[0.9] tracking-tighter text-white"
+            initial="hidden"
+            animate="visible"
+          >
+            {title.split("").map((char, i) => (
+              <motion.span
+                key={i}
+                custom={i}
+                variants={charVariants}
+                className="inline-block"
+              >
+                {char}
+              </motion.span>
+            ))}
+          </motion.h1>
+        </div>
 
-        {/* Tagline */}
+        {/* Horizontal accent line */}
+        <motion.div
+          className="my-6 h-px w-24 origin-center bg-accent sm:w-32"
+          variants={lineExpand}
+          initial="hidden"
+          animate="visible"
+        />
+
+        {/* Subtitle */}
         <motion.p
-          custom={2}
-          variants={fadeInUp}
-          className="mb-10 max-w-lg text-center text-base font-light leading-relaxed text-stone-300 sm:text-lg md:text-xl"
+          custom={1.8}
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          className="mb-12 max-w-md text-center text-sm font-light tracking-[0.2em] uppercase text-white/50 sm:text-base"
         >
           인조대리석 전문 가공 및 시공
         </motion.p>
 
         {/* CTA buttons */}
         <motion.div
-          custom={3}
-          variants={fadeInUp}
-          className="flex flex-col gap-3 sm:flex-row sm:gap-4"
+          custom={2.1}
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-4 sm:flex-row sm:gap-6"
         >
-          <Link
-            href="/portfolio"
-            className={cn(
-              "group relative inline-flex items-center justify-center gap-2",
-              "rounded-lg bg-white px-7 py-3.5 text-sm font-semibold text-stone-900",
-              "transition-all duration-300",
-              "hover:bg-stone-100 hover:shadow-lg hover:shadow-white/10",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-            )}
-          >
-            시공사례 보기
-            <svg
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+          <MagneticButton strength={0.2}>
+            <Link
+              href="/portfolio"
+              className={cn(
+                "group relative inline-flex items-center justify-center gap-3",
+                "rounded-full bg-white px-8 py-4 text-sm font-semibold text-primary",
+                "overflow-hidden transition-all duration-500",
+                "hover:shadow-2xl hover:shadow-white/20"
+              )}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </Link>
+              <span className="relative z-10">시공사례 보기</span>
+              <svg
+                className="relative z-10 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+              {/* Hover fill */}
+              <div className="absolute inset-0 bg-accent scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100" />
+              <span className="absolute inset-0 flex items-center justify-center gap-3 text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                시공사례 보기
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </span>
+            </Link>
+          </MagneticButton>
 
-          <Link
-            href="/contact"
-            className={cn(
-              "group inline-flex items-center justify-center gap-2",
-              "rounded-lg border border-stone-500/40 bg-stone-900/40 px-7 py-3.5",
-              "text-sm font-semibold text-white backdrop-blur-sm",
-              "transition-all duration-300",
-              "hover:border-stone-400/60 hover:bg-stone-800/60",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-            )}
-          >
-            무료 견적 문의
-            <svg
-              className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
+          <MagneticButton strength={0.2}>
+            <Link
+              href="/contact"
+              className={cn(
+                "group inline-flex items-center justify-center gap-3",
+                "rounded-full border border-white/20 bg-white/5 px-8 py-4",
+                "text-sm font-semibold text-white backdrop-blur-sm",
+                "transition-all duration-500",
+                "hover:border-accent/50 hover:bg-accent/10"
+              )}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-              />
-            </svg>
-          </Link>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-2"
-          >
-            <span className="text-[10px] font-light tracking-widest text-stone-500">
-              SCROLL
-            </span>
-            <svg
-              className="h-4 w-4 text-stone-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.5}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19 14l-7 7m0 0l-7-7"
-              />
-            </svg>
-          </motion.div>
+              무료 견적 문의
+              <svg
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+            </Link>
+          </MagneticButton>
         </motion.div>
       </motion.div>
+
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.5, duration: 1 }}
+        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
+      >
+        <motion.div
+          animate={{ y: [0, 12, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="flex flex-col items-center gap-3"
+        >
+          <span className="text-[9px] font-light tracking-[0.4em] text-white/30 uppercase">
+            Scroll to explore
+          </span>
+          <div className="h-10 w-[1px] bg-gradient-to-b from-white/40 to-transparent" />
+        </motion.div>
+      </motion.div>
+
+      {/* Bottom gradient fade into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
     </section>
   );
 }

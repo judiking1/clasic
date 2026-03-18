@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 
@@ -24,19 +25,26 @@ export function CategoryFilter({ currentCategory }: CategoryFilterProps) {
   };
 
   return (
-    <div className="mb-8 flex flex-wrap justify-center gap-2">
+    <div className="mb-12 flex flex-wrap justify-center gap-2">
       {PORTFOLIO_CATEGORIES.map((category) => (
         <button
           key={category.value}
           onClick={() => handleCategoryChange(category.value)}
           className={cn(
-            "rounded-full px-5 py-2 text-sm font-medium transition-all duration-200",
+            "relative rounded-full px-5 py-2 text-sm font-medium transition-all duration-300",
             currentCategory === category.value
-              ? "bg-amber-500 text-white shadow-md shadow-amber-200"
-              : "bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+              ? "bg-primary text-white"
+              : "bg-transparent text-secondary hover:text-primary border border-border hover:border-primary/30"
           )}
         >
-          {category.label}
+          {currentCategory === category.value && (
+            <motion.div
+              layoutId="filter-bg"
+              className="absolute inset-0 rounded-full bg-primary"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            />
+          )}
+          <span className="relative z-10">{category.label}</span>
         </button>
       ))}
     </div>
