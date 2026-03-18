@@ -4,11 +4,12 @@ export const SITE_CONFIG = {
   description:
     "인조대리석 싱크대, 세면대, 카운터 맞춤 제작 및 시공 전문 업체. 대리석 가공부터 시공까지 원스톱 서비스를 제공합니다.",
   owner: "이상남",
-  phone: "031-559-1691",
+  phone: "010-6213-3736",
   address: "경기도 남양주시 화도읍 비룡로 464번길 8-23",
   addressDetail: "",
   businessNumber: "126-08-69379",
   email: "mytimetime1@naver.com",
+  adminEmail: "judiking1@naver.com",
   naverMapUrl: "https://naver.me/FJO2c6hq",
   latitude: 37.6288,
   longitude: 127.3052,

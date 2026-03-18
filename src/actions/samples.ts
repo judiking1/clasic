@@ -3,11 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { samples } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
-import { generateId } from "@/lib/utils";
+import { eq, desc, asc, like, or, and, sql, inArray } from "drizzle-orm";
+import { generateId, getPaginationValues } from "@/lib/utils";
 import { sampleSchema } from "@/lib/validations/sample";
 import { deleteImage } from "./upload";
-import type { ActionResult, Sample } from "@/types";
+import type { ActionResult, Sample, PaginatedResult } from "@/types";
 
 export async function createSample(formData: FormData): Promise<ActionResult> {
   const raw = {
@@ -120,6 +120,79 @@ export async function getSamples(filters?: {
     return await db.select().from(samples).orderBy(desc(samples.createdAt));
   } catch {
     return [];
+  }
+}
+
+export async function getSamplesPaginated(params: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  colorCategory?: string;
+  patternType?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}): Promise<PaginatedResult<Sample>> {
+  const { page, pageSize, offset } = getPaginationValues(params.page, params.pageSize);
+  const empty = { data: [], total: 0, page, pageSize, totalPages: 0 };
+
+  try {
+    const conditions = [];
+    if (params.colorCategory && params.colorCategory !== "all") {
+      conditions.push(eq(samples.colorCategory, params.colorCategory));
+    }
+    if (params.patternType && params.patternType !== "all") {
+      conditions.push(eq(samples.patternType, params.patternType));
+    }
+    if (params.search) {
+      const s = `%${params.search}%`;
+      conditions.push(or(like(samples.name, s), like(samples.brand, s))!);
+    }
+
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(samples)
+      .where(where);
+    const total = countResult?.count ?? 0;
+    if (total === 0) return empty;
+
+    const sortCol = params.sortBy === "name" ? samples.name : samples.createdAt;
+    const orderFn = params.sortOrder === "asc" ? asc : desc;
+
+    const data = await db
+      .select()
+      .from(samples)
+      .where(where)
+      .orderBy(orderFn(sortCol))
+      .limit(pageSize)
+      .offset(offset);
+
+    return { data, total, page, pageSize, totalPages: Math.ceil(total / pageSize) };
+  } catch (error) {
+    console.error("getSamplesPaginated error:", error);
+    return empty;
+  }
+}
+
+export async function deleteSamples(ids: string[]): Promise<ActionResult> {
+  try {
+    for (const id of ids) {
+      await deleteSample(id);
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Bulk delete samples error:", error);
+    return { success: false, error: "일괄 삭제에 실패했습니다" };
+  }
+}
+
+export async function getSampleCount(): Promise<number> {
+  try {
+    const [result] = await db.select({ count: sql<number>`count(*)` }).from(samples);
+    return result?.count ?? 0;
+  } catch {
+    return 0;
   }
 }
 

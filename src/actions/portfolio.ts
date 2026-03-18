@@ -3,11 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { portfolios, portfolioImages } from "@/lib/db/schema";
-import { eq, desc } from "drizzle-orm";
-import { generateId } from "@/lib/utils";
+import { eq, desc, asc, like, or, and, sql, inArray } from "drizzle-orm";
+import { generateId, getPaginationValues } from "@/lib/utils";
 import { portfolioSchema } from "@/lib/validations/portfolio";
 import { deleteImage } from "./upload";
-import type { ActionResult, PortfolioWithImages } from "@/types";
+import type { ActionResult, PortfolioWithImages, PaginatedResult } from "@/types";
 
 export async function createPortfolio(
   formData: FormData
@@ -204,6 +204,92 @@ export async function getPortfolio(
     return { ...result[0], images };
   } catch {
     return null;
+  }
+}
+
+export async function getPortfoliosPaginated(params: {
+  page?: number;
+  pageSize?: number;
+  search?: string;
+  category?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}): Promise<PaginatedResult<PortfolioWithImages>> {
+  const { page, pageSize, offset } = getPaginationValues(params.page, params.pageSize);
+  const empty = { data: [], total: 0, page, pageSize, totalPages: 0 };
+
+  try {
+    const conditions = [];
+    if (params.category && params.category !== "all") {
+      conditions.push(eq(portfolios.category, params.category));
+    }
+    if (params.search) {
+      const s = `%${params.search}%`;
+      conditions.push(or(like(portfolios.title, s), like(portfolios.description, s))!);
+    }
+
+    const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(portfolios)
+      .where(where);
+    const total = countResult?.count ?? 0;
+    if (total === 0) return empty;
+
+    const sortCol = params.sortBy === "title" ? portfolios.title : portfolios.createdAt;
+    const orderFn = params.sortOrder === "asc" ? asc : desc;
+
+    const rows = await db
+      .select()
+      .from(portfolios)
+      .where(where)
+      .orderBy(orderFn(sortCol))
+      .limit(pageSize)
+      .offset(offset);
+
+    const ids = rows.map((r) => r.id);
+    const allImages = ids.length > 0
+      ? await db.select().from(portfolioImages).where(inArray(portfolioImages.portfolioId, ids)).orderBy(portfolioImages.sortOrder)
+      : [];
+
+    const imageMap = new Map<string, typeof allImages>();
+    for (const img of allImages) {
+      const arr = imageMap.get(img.portfolioId) ?? [];
+      arr.push(img);
+      imageMap.set(img.portfolioId, arr);
+    }
+
+    const data: PortfolioWithImages[] = rows.map((p) => ({
+      ...p,
+      images: imageMap.get(p.id) ?? [],
+    }));
+
+    return { data, total, page, pageSize, totalPages: Math.ceil(total / pageSize) };
+  } catch (error) {
+    console.error("getPortfoliosPaginated error:", error);
+    return empty;
+  }
+}
+
+export async function deletePortfolios(ids: string[]): Promise<ActionResult> {
+  try {
+    for (const id of ids) {
+      await deletePortfolio(id);
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Bulk delete portfolios error:", error);
+    return { success: false, error: "일괄 삭제에 실패했습니다" };
+  }
+}
+
+export async function getPortfolioCount(): Promise<number> {
+  try {
+    const [result] = await db.select({ count: sql<number>`count(*)` }).from(portfolios);
+    return result?.count ?? 0;
+  } catch {
+    return 0;
   }
 }
 

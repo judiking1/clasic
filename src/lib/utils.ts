@@ -32,3 +32,9 @@ export function truncate(str: string, length: number): string {
   if (str.length <= length) return str;
   return str.slice(0, length) + "...";
 }
+
+export function getPaginationValues(page?: number, pageSize?: number) {
+  const p = Math.max(1, page ?? 1);
+  const ps = Math.min(100, Math.max(1, pageSize ?? 20));
+  return { page: p, pageSize: ps, offset: (p - 1) * ps };
+}
