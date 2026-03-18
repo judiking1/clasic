@@ -121,10 +121,10 @@ export default function CompanyIntro() {
           className="mx-auto max-w-2xl text-center"
         >
           <span className="mb-3 inline-block text-sm font-medium tracking-widest text-stone-400">
-            WHY CLASSIC STONE
+            WHY CLASSIC
           </span>
           <h2 className="mb-4 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
-            클래식 스톤을 선택하는 이유
+            클래식을 선택하는 이유
           </h2>
           <p className="text-base leading-relaxed text-stone-500 sm:text-lg">
             최고의 품질과 합리적인 가격, 그리고 전문적인 시공 서비스를 한 곳에서 만나보세요.

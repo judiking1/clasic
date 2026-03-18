@@ -15,6 +15,9 @@ export default function Footer() {
               인조대리석 가공 및 시공 전문 업체
             </p>
             <p className="text-sm text-white/70">
+              대표: {SITE_CONFIG.owner}
+            </p>
+            <p className="text-sm text-white/70">
               사업자등록번호: {SITE_CONFIG.businessNumber}
             </p>
           </div>
@@ -56,10 +59,6 @@ export default function Footer() {
               <li className="flex items-center gap-2">
                 <span>&#9993;</span>
                 <span>{SITE_CONFIG.email}</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 shrink-0">&#128337;</span>
-                <span>{SITE_CONFIG.businessHours}</span>
               </li>
             </ul>
           </div>

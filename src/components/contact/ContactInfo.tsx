@@ -55,21 +55,6 @@ export function ContactInfo() {
             </div>
           </div>
 
-          {/* Business Hours */}
-          <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600">
-              <svg className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-900">영업시간</p>
-              <p className="mt-0.5 text-sm text-gray-600">
-                {SITE_CONFIG.businessHours}
-              </p>
-              <p className="text-xs text-gray-400">일요일 및 공휴일 휴무</p>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -82,7 +67,7 @@ export function ContactInfo() {
           길찾기 및 상세 위치를 확인하세요
         </p>
         <a
-          href={`https://map.naver.com/v5/search/${encodeURIComponent(SITE_CONFIG.address)}`}
+          href={SITE_CONFIG.naverMapUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-amber-600"

@@ -78,7 +78,6 @@ export default function RootLayout({
                 latitude: SITE_CONFIG.latitude,
                 longitude: SITE_CONFIG.longitude,
               },
-              openingHours: "Mo-Fr 09:00-18:00, Sa 09:00-13:00",
             }),
           }}
         />

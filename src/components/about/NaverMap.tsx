@@ -1,75 +1,46 @@
-"use client";
-
-import { useRef, useEffect, useState } from "react";
-import Script from "next/script";
 import { SITE_CONFIG } from "@/lib/constants";
 
-declare global {
-  interface Window {
-    naver: {
-      maps: {
-        Map: new (
-          element: HTMLElement,
-          options: Record<string, unknown>
-        ) => unknown;
-        LatLng: new (lat: number, lng: number) => unknown;
-        Marker: new (options: Record<string, unknown>) => unknown;
-      };
-    };
-  }
-}
-
-const NAVER_MAP_CLIENT_ID = process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID;
-
 export function NaverMap() {
-  const mapRef = useRef<HTMLDivElement>(null);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!isScriptLoaded || !mapRef.current || !window.naver) return;
-
-    const location = new window.naver.maps.LatLng(
-      SITE_CONFIG.latitude,
-      SITE_CONFIG.longitude
-    );
-
-    const map = new window.naver.maps.Map(mapRef.current, {
-      center: location,
-      zoom: 16,
-      zoomControl: true,
-    });
-
-    new window.naver.maps.Marker({
-      position: location,
-      map,
-    });
-  }, [isScriptLoaded]);
-
-  if (!NAVER_MAP_CLIENT_ID) {
-    return (
-      <div className="flex h-80 w-full items-center justify-center bg-gray-100 text-gray-500">
-        <div className="text-center">
-          <svg className="mx-auto mb-3 h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <p className="text-sm font-medium">지도를 불러올 수 없습니다</p>
-          <p className="mt-1 text-xs text-gray-400">
-            네이버 지도 클라이언트 ID가 설정되지 않았습니다
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <>
-      <Script
-        src={`https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${NAVER_MAP_CLIENT_ID}`}
-        strategy="afterInteractive"
-        onLoad={() => setIsScriptLoaded(true)}
-      />
-      <div ref={mapRef} className="h-80 w-full" />
-    </>
+    <div className="flex h-80 w-full flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-stone-100 to-stone-200 p-8 text-center">
+      {/* Map Icon */}
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
+        <svg
+          className="h-8 w-8 text-amber-600"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+          />
+        </svg>
+      </div>
+
+      {/* Address */}
+      <p className="mb-1 text-lg font-bold text-stone-900">{SITE_CONFIG.name}</p>
+      <p className="mb-6 text-sm text-stone-600">{SITE_CONFIG.address}</p>
+
+      {/* Naver Map Button */}
+      <a
+        href={SITE_CONFIG.naverMapUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-lg bg-[#03C75A] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#02b351] hover:shadow-lg"
+      >
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16.273 12.845 7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727v12.845z" />
+        </svg>
+        네이버 지도에서 보기
+      </a>
+    </div>
   );
 }

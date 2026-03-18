@@ -111,7 +111,7 @@ export default function StatsCounter() {
             OUR ACHIEVEMENTS
           </span>
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            숫자로 보는 클래식 스톤
+            숫자로 보는 클래식
           </h2>
         </motion.div>
 

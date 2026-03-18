@@ -85,7 +85,7 @@ export default function HeroSection() {
           variants={fadeInUp}
           className="mb-4 text-center text-5xl font-bold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
         >
-          클래식 스톤
+          클래식
         </motion.h1>
 
         {/* Tagline */}

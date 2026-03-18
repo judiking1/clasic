@@ -6,7 +6,7 @@ import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 
 export const metadata = {
   title: "시공사례",
-  description: "클래식 스톤의 인조대리석 시공사례를 확인해보세요.",
+  description: "클래식의 인조대리석 시공사례를 확인해보세요.",
 };
 
 export default async function PortfolioPage({

@@ -1,16 +1,17 @@
 export const SITE_CONFIG = {
-  name: "클래식 스톤",
-  nameEn: "Classic Stone",
+  name: "클래식",
+  nameEn: "Classic",
   description:
     "인조대리석 싱크대, 세면대, 카운터 맞춤 제작 및 시공 전문 업체. 대리석 가공부터 시공까지 원스톱 서비스를 제공합니다.",
-  phone: "010-0000-0000",
-  address: "경기도 OO시 OO구 OO로 123",
-  addressDetail: "OO공단 내",
-  businessHours: "평일 09:00 - 18:00 / 토요일 09:00 - 13:00",
-  businessNumber: "000-00-00000",
-  email: "contact@classicstone.co.kr",
-  latitude: 37.5665,
-  longitude: 126.978,
+  owner: "이상남",
+  phone: "031-559-1691",
+  address: "경기도 남양주시 화도읍 비룡로 464번길 8-23",
+  addressDetail: "",
+  businessNumber: "126-08-69379",
+  email: "mytimetime1@naver.com",
+  naverMapUrl: "https://naver.me/FJO2c6hq",
+  latitude: 37.6288,
+  longitude: 127.3052,
 } as const;
 
 export const NAV_ITEMS = [
