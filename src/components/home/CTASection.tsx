@@ -127,16 +127,6 @@ export default function CTASection() {
             </MagneticButton>
           </motion.div>
 
-          {/* Hours */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-            className="mt-8 text-sm text-white/50"
-          >
-            평일 09:00 - 18:00 &middot; 토요일 09:00 - 13:00
-          </motion.p>
         </div>
       </div>
     </section>

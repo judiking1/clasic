@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 import { SITE_CONFIG } from "@/lib/constants";
 import SmoothScroll from "@/components/ui/SmoothScroll";
 import ScrollProgress from "@/components/ui/ScrollProgress";
@@ -66,6 +67,7 @@ export default function RootLayout({
           <GrainOverlay />
           {children}
         </SmoothScroll>
+        <Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
