@@ -4,9 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useMotionValueEvent, useScroll } from "framer-motion";
-import { NAV_ITEMS, SITE_CONFIG } from "@/lib/constants";
+import { NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { checkIsAdmin } from "@/actions/auth";
+import CLSLogo from "@/components/ui/CLSLogo";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -15,6 +16,7 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
   const pathname = usePathname();
   const lastScrollY = useRef(0);
+  const scrollIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isHome = pathname === "/";
   const useDarkText = !isHome || isScrolled;
@@ -24,13 +26,20 @@ export default function Header() {
   useMotionValueEvent(scrollY, "change", (latest) => {
     const diff = latest - lastScrollY.current;
     setIsScrolled(latest > 50);
-    // Hide on scroll down, show on scroll up
+
+    // Hide on scroll down past 100px
     if (latest > 100) {
       setIsHidden(diff > 0);
     } else {
       setIsHidden(false);
     }
     lastScrollY.current = latest;
+
+    // Auto-show header after scroll stops (1.5s idle)
+    if (scrollIdleTimer.current) clearTimeout(scrollIdleTimer.current);
+    scrollIdleTimer.current = setTimeout(() => {
+      setIsHidden(false);
+    }, 1500);
   });
 
   useEffect(() => {
@@ -41,6 +50,21 @@ export default function Header() {
     checkIsAdmin().then(setIsAdmin);
   }, [pathname]);
 
+  // Show header when drag/pointer interaction ends
+  useEffect(() => {
+    const handlePointerUp = () => {
+      if (lastScrollY.current > 100) {
+        // Small delay to let scroll settle, then show header
+        setTimeout(() => setIsHidden(false), 300);
+      }
+    };
+    window.addEventListener("pointerup", handlePointerUp);
+    return () => {
+      window.removeEventListener("pointerup", handlePointerUp);
+      if (scrollIdleTimer.current) clearTimeout(scrollIdleTimer.current);
+    };
+  }, []);
+
   return (
     <motion.header
       animate={{
@@ -50,24 +74,34 @@ export default function Header() {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         useDarkText
-          ? "bg-background/80 backdrop-blur-xl border-b border-border/50"
+          ? "bg-background/90 backdrop-blur-2xl border-b border-border/30"
           : "bg-transparent"
       )}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-20">
           {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3">
-            {/* Accent dot */}
-            <span className="h-2 w-2 rounded-full bg-accent transition-transform duration-300 group-hover:scale-150" />
-            <span
-              className={cn(
-                "text-lg font-bold tracking-tight transition-colors duration-300 lg:text-xl",
-                useDarkText ? "text-primary" : "text-white"
-              )}
-            >
-              {SITE_CONFIG.name}
-            </span>
+          <Link href="/" className="group flex items-center gap-2">
+            <CLSLogo
+              size="sm"
+              variant={useDarkText ? "dark" : "light"}
+            />
+            <div className="flex flex-col">
+              <span
+                className={cn(
+                  "text-base font-bold tracking-tight transition-colors duration-300 leading-tight lg:text-lg",
+                  useDarkText ? "text-primary" : "text-white"
+                )}
+              >
+                클래식
+              </span>
+              <span className={cn(
+                "text-[8px] font-medium tracking-[0.3em] uppercase transition-colors duration-300",
+                useDarkText ? "text-accent/60" : "text-accent/50"
+              )}>
+                Marble
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -83,10 +117,10 @@ export default function Header() {
                     useDarkText
                       ? isActive
                         ? "text-accent"
-                        : "text-primary/70 hover:text-primary"
+                        : "text-primary/60 hover:text-primary"
                       : isActive
                         ? "text-accent"
-                        : "text-white/70 hover:text-white"
+                        : "text-white/60 hover:text-white"
                   )}
                 >
                   {item.label}
@@ -101,11 +135,24 @@ export default function Header() {
               );
             })}
 
+            {/* CTA */}
+            <Link
+              href="/contact"
+              className={cn(
+                "ml-4 rounded-full px-5 py-2 text-xs font-semibold transition-all duration-500",
+                useDarkText
+                  ? "bg-accent text-white hover:shadow-lg hover:shadow-accent/20"
+                  : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
+              )}
+            >
+              견적 문의
+            </Link>
+
             {isAdmin && (
               <Link
                 href="/admin"
                 className={cn(
-                  "ml-4 rounded-full px-4 py-1.5 text-xs font-semibold transition-all duration-300",
+                  "ml-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300",
                   useDarkText
                     ? "bg-primary text-white hover:bg-primary/80"
                     : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
@@ -158,7 +205,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Navigation - Full screen overlay */}
+      {/* Mobile Navigation */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -190,23 +237,20 @@ export default function Header() {
                   </Link>
                 </motion.div>
               ))}
-
-              {isAdmin && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: NAV_ITEMS.length * 0.05, duration: 0.3 }}
-                  className="mt-8"
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: NAV_ITEMS.length * 0.05, duration: 0.3 }}
+                className="mt-8"
+              >
+                <Link
+                  href="/contact"
+                  className="inline-flex rounded-full bg-accent px-10 py-4 text-sm font-semibold text-white"
                 >
-                  <Link
-                    href="/admin"
-                    className="inline-flex rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white"
-                  >
-                    관리자 대시보드
-                  </Link>
-                </motion.div>
-              )}
+                  무료 견적 문의
+                </Link>
+              </motion.div>
             </nav>
           </motion.div>
         )}
