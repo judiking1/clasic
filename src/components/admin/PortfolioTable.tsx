@@ -3,7 +3,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import DataTable from "./DataTable";
 import type { PortfolioWithImages, PaginatedResult } from "@/types";
-import { deletePortfolios } from "@/actions/portfolio";
+import { useDeletePortfolios } from "@/hooks/use-portfolios";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import Image from "next/image";
@@ -118,6 +118,7 @@ export function PortfolioTable({ result }: PortfolioTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const deleteMutation = useDeletePortfolios();
 
   const currentCategory = searchParams.get("category") ?? "";
 
@@ -138,10 +139,10 @@ export function PortfolioTable({ result }: PortfolioTableProps) {
   const handleDelete = useCallback(
     async (ids: string[]) => {
       if (!confirm(`${ids.length}개의 시공사례를 삭제하시겠습니까?`)) return;
-      await deletePortfolios(ids);
+      await deleteMutation.mutateAsync(ids);
       router.refresh();
     },
-    [router]
+    [router, deleteMutation]
   );
 
   const filters = (

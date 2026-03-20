@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import type { ActionResult } from "@/types";
 
 interface DeleteButtonProps {
@@ -22,11 +23,14 @@ export default function DeleteButton({
     try {
       const result = await action();
       if (result.success) {
+        toast.success("삭제되었습니다.");
         setShowModal(false);
         router.refresh();
+      } else {
+        toast.error(result.error ?? "삭제에 실패했습니다.");
       }
     } catch {
-      // Error handling silently
+      toast.error("삭제 중 오류가 발생했습니다.");
     } finally {
       setIsDeleting(false);
     }

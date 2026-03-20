@@ -3,7 +3,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import DataTable from "./DataTable";
 import type { Sample, PaginatedResult } from "@/types";
-import { deleteSamples } from "@/actions/samples";
+import { useDeleteSamples } from "@/hooks/use-samples";
 import { SAMPLE_COLORS, SAMPLE_PATTERNS } from "@/lib/constants";
 import Image from "next/image";
 import Link from "next/link";
@@ -109,6 +109,7 @@ export function SampleTable({ result }: SampleTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const deleteMutation = useDeleteSamples();
 
   const currentColor = searchParams.get("colorCategory") ?? "";
   const currentPattern = searchParams.get("patternType") ?? "";
@@ -130,10 +131,10 @@ export function SampleTable({ result }: SampleTableProps) {
   const handleDelete = useCallback(
     async (ids: string[]) => {
       if (!confirm(`${ids.length}개의 샘플을 삭제하시겠습니까?`)) return;
-      await deleteSamples(ids);
+      await deleteMutation.mutateAsync(ids);
       router.refresh();
     },
-    [router]
+    [router, deleteMutation]
   );
 
   const filters = (

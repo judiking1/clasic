@@ -43,6 +43,29 @@ export type Inquiry = {
   createdAt: string;
 };
 
+export type AdminUser = {
+  id: string;
+  email: string;
+  name: string;
+  role: "superadmin" | "admin";
+  isActive: boolean;
+  lastLoginAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type ActivityLog = {
+  id: string;
+  userId: string;
+  userName: string;
+  action: "create" | "update" | "delete" | "login" | "logout";
+  resource: string;
+  resourceId: string | null;
+  details: string | null;
+  ipAddress: string | null;
+  createdAt: string;
+};
+
 export type ActionResult = {
   success: boolean;
   error?: string;

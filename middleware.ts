@@ -9,8 +9,13 @@ const secret = new TextEncoder().encode(
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow login page
+  // Allow login page and public API routes
   if (pathname === "/admin/login") {
+    return NextResponse.next();
+  }
+
+  // API routes handle their own auth via getApiUser
+  if (pathname.startsWith("/api/admin/")) {
     return NextResponse.next();
   }
 
@@ -23,12 +28,15 @@ export async function middleware(request: NextRequest) {
 
   try {
     await jwtVerify(token, secret);
-    return NextResponse.next();
+
+    // Add user info to response headers for client access
+    const response = NextResponse.next();
+    return response;
   } catch {
     return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

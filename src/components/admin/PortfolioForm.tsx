@@ -6,6 +6,7 @@ import { createPortfolio, updatePortfolio } from "@/actions/portfolio";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import ImageUploader from "@/components/ui/ImageUploader";
 import type { PortfolioWithImages } from "@/types";
+import { toast } from "sonner";
 
 interface PortfolioFormProps {
   mode: "create" | "edit";
@@ -58,13 +59,17 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
       }
 
       if (result.success) {
+        toast.success(mode === "create" ? "시공사례가 등록되었습니다." : "시공사례가 수정되었습니다.");
         router.push("/admin/portfolio");
         router.refresh();
       } else {
-        setError(result.error ?? "오류가 발생했습니다.");
+        const errorMsg = result.error ?? "오류가 발생했습니다.";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch {
       setError("오류가 발생했습니다. 다시 시도해주세요.");
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +105,7 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="시공사례 제목을 입력하세요"
           />
         </div>
@@ -117,7 +122,7 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
           >
             <option value="">카테고리를 선택하세요</option>
             {categories.map((cat) => (
@@ -140,7 +145,7 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={5}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-y"
             placeholder="시공사례에 대한 설명을 입력하세요"
           />
         </div>
@@ -151,7 +156,7 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
             type="checkbox"
             checked={isFeatured}
             onChange={(e) => setIsFeatured(e.target.checked)}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            className="w-4 h-4 text-amber-600 border-gray-300 rounded focus:ring-amber-500"
           />
           <label htmlFor="isFeatured" className="text-sm font-medium text-gray-700">
             추천 시공사례로 표시
@@ -198,7 +203,7 @@ export default function PortfolioForm({ mode, initialData }: PortfolioFormProps)
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition"
+          className="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-medium rounded-lg transition"
         >
           {isSubmitting
             ? "저장 중..."

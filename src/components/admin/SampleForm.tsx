@@ -7,6 +7,10 @@ import { createSample, updateSample } from "@/actions/samples";
 import { uploadImage } from "@/actions/upload";
 import { SAMPLE_COLORS, SAMPLE_PATTERNS } from "@/lib/constants";
 import type { Sample } from "@/types";
+import { toast } from "sonner";
+
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
 
 interface SampleFormProps {
   mode: "create" | "edit";
@@ -30,18 +34,39 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // 파일 타입 검증
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      const msg = "JPG, PNG, WebP, GIF 형식의 이미지만 업로드할 수 있습니다.";
+      setError(msg);
+      toast.error(msg);
+      return;
+    }
+
+    // 파일 크기 검증 (10MB)
+    if (file.size > MAX_IMAGE_SIZE) {
+      const msg = "이미지 크기는 10MB 이하여야 합니다.";
+      setError(msg);
+      toast.error(msg);
+      return;
+    }
+
     setIsUploading(true);
+    setError("");
     try {
       const formData = new FormData();
       formData.append("file", file);
       const result = await uploadImage(formData);
       if (result.success && result.data) {
         setImageUrl(result.data as string);
+        toast.success("이미지가 업로드되었습니다.");
       } else {
-        setError(result.error ?? "이미지 업로드에 실패했습니다.");
+        const errorMsg = result.error ?? "이미지 업로드에 실패했습니다.";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch {
       setError("이미지 업로드 중 오류가 발생했습니다.");
+      toast.error("이미지 업로드 중 오류가 발생했습니다.");
     } finally {
       setIsUploading(false);
     }
@@ -69,13 +94,17 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
       }
 
       if (result.success) {
+        toast.success(mode === "create" ? "샘플이 등록되었습니다." : "샘플이 수정되었습니다.");
         router.push("/admin/samples");
         router.refresh();
       } else {
-        setError(result.error ?? "오류가 발생했습니다.");
+        const errorMsg = result.error ?? "오류가 발생했습니다.";
+        setError(errorMsg);
+        toast.error(errorMsg);
       }
     } catch {
       setError("오류가 발생했습니다. 다시 시도해주세요.");
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
     } finally {
       setIsSubmitting(false);
     }
@@ -103,7 +132,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="샘플 이름을 입력하세요"
           />
         </div>
@@ -121,7 +150,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             placeholder="브랜드명을 입력하세요"
           />
         </div>
@@ -139,7 +168,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
               value={colorCategory}
               onChange={(e) => setColorCategory(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             >
               <option value="">색상을 선택하세요</option>
               {SAMPLE_COLORS.map((color) => (
@@ -162,7 +191,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
               value={patternType}
               onChange={(e) => setPatternType(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
             >
               <option value="">패턴을 선택하세요</option>
               {SAMPLE_PATTERNS.map((pattern) => (
@@ -186,7 +215,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={4}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-y"
             placeholder="샘플에 대한 설명을 입력하세요"
           />
         </div>
@@ -228,10 +257,10 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
             accept="image/*"
             onChange={handleImageUpload}
             disabled={isUploading}
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 disabled:opacity-50"
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 disabled:opacity-50"
           />
           {isUploading && (
-            <p className="text-sm text-blue-600 mt-2">업로드 중...</p>
+            <p className="text-sm text-amber-600 mt-2">업로드 중...</p>
           )}
         </div>
       </div>
@@ -240,7 +269,7 @@ export default function SampleForm({ mode, initialData }: SampleFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition"
+          className="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-400 text-white font-medium rounded-lg transition"
         >
           {isSubmitting
             ? "저장 중..."

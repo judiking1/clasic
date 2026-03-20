@@ -3,7 +3,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import DataTable from "./DataTable";
 import type { Inquiry, PaginatedResult } from "@/types";
-import { deleteInquiries, markInquiriesAsRead } from "@/actions/inquiries";
+import { useDeleteInquiries, useMarkInquiriesAsRead } from "@/hooks/use-inquiries";
 import { INQUIRY_TYPES } from "@/lib/constants";
 import { formatDate, formatPhone } from "@/lib/utils";
 import Link from "next/link";
@@ -97,6 +97,8 @@ export function InquiryTable({ result }: InquiryTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+  const deleteMutation = useDeleteInquiries();
+  const markAsReadMutation = useMarkInquiriesAsRead();
 
   const currentType = searchParams.get("inquiryType") ?? "";
   const currentIsRead = searchParams.get("isRead") ?? "";
@@ -118,20 +120,20 @@ export function InquiryTable({ result }: InquiryTableProps) {
   const handleDelete = useCallback(
     async (ids: string[]) => {
       if (!confirm(`${ids.length}개의 문의를 삭제하시겠습니까?`)) return;
-      await deleteInquiries(ids);
+      await deleteMutation.mutateAsync(ids);
       router.refresh();
     },
-    [router]
+    [router, deleteMutation]
   );
 
   const handleAction = useCallback(
     async (action: string, ids: string[]) => {
       if (action === "markAsRead") {
-        await markInquiriesAsRead(ids);
+        await markAsReadMutation.mutateAsync(ids);
         router.refresh();
       }
     },
-    [router]
+    [router, markAsReadMutation]
   );
 
   const filters = (
