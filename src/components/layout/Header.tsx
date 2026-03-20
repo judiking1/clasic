@@ -225,7 +225,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-16 z-[60] bg-background/98 backdrop-blur-2xl lg:hidden"
+            className="fixed inset-0 top-16 z-[60] bg-background backdrop-blur-none lg:hidden"
           >
             <nav className="flex h-full flex-col items-center justify-center gap-1 px-8">
               {NAV_ITEMS.map((item, i) => (
