@@ -211,7 +211,6 @@ function Scene() {
         azimuth={[-1.4, 1.4]}
         speed={2}
         zoom={1}
-        config={{ mass: 2, tension: 170, friction: 26 }}
         snap={true}
       >
         <MarbleSlab />
