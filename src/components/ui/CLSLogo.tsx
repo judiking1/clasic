@@ -14,8 +14,8 @@ export default function CLSLogo({
   variant = "dark",
 }: CLSLogoProps) {
   const sizeMap = {
-    sm: { width: 44, height: 44 },
-    md: { width: 64, height: 64 },
+    sm: { width: 52, height: 52 },
+    md: { width: 80, height: 80 },
     lg: { width: 120, height: 120 },
   };
 

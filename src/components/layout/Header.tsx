@@ -99,22 +99,14 @@ export default function Header() {
                 size="sm"
                 variant={useDarkText ? "dark" : "light"}
               />
-              <div className="flex flex-col">
-                <span
-                  className={cn(
-                    "text-base font-bold tracking-tight transition-colors duration-300 leading-tight lg:text-lg",
-                    useDarkText ? "text-primary" : "text-white"
-                  )}
-                >
-                  클래식
-                </span>
-                <span className={cn(
-                  "text-[8px] font-medium tracking-[0.3em] uppercase transition-colors duration-300",
-                  useDarkText ? "text-accent/60" : "text-accent/50"
-                )}>
-                  Marble
-                </span>
-              </div>
+              <span
+                className={cn(
+                  "text-lg font-bold tracking-tight transition-colors duration-300 lg:text-xl",
+                  useDarkText ? "text-primary" : "text-white"
+                )}
+              >
+                클래식
+              </span>
             </Link>
 
             {/* Desktop Navigation */}

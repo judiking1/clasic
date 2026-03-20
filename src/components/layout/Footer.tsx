@@ -30,7 +30,7 @@ export default function Footer() {
         >
           <div>
             <div className="flex items-center gap-4">
-              <CLSLogo size="md" variant="light" />
+              <CLSLogo size="lg" variant="light" />
               <h2 className="text-5xl font-bold tracking-tight sm:text-6xl md:text-7xl">
                 {SITE_CONFIG.name}
                 <span className="text-accent">.</span>
