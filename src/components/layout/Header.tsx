@@ -132,7 +132,7 @@ export default function Header() {
                     {isActive && (
                       <motion.div
                         layoutId="nav-underline"
-                        className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent"
                         transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
@@ -219,7 +219,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-16 z-[60] bg-background lg:hidden"
+            className="fixed inset-0 top-16 z-60 bg-background lg:hidden"
           >
             <nav className="flex h-full flex-col items-center justify-center gap-1 px-8">
               {NAV_ITEMS.map((item, i) => (
