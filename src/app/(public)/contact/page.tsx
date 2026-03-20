@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
+import { NaverMap } from "@/components/about/NaverMap";
 import PageHero from "@/components/ui/PageHero";
 
 export const metadata = {
@@ -33,6 +34,22 @@ export default function ContactPage() {
 
             <div className="lg:col-span-2">
               <ContactInfo />
+            </div>
+          </div>
+
+          {/* Map Section */}
+          <div className="mt-12">
+            <div className="mb-6 flex items-center gap-4">
+              <div className="h-px w-10 bg-accent" />
+              <span className="text-xs font-medium tracking-[0.3em] uppercase text-accent">
+                Location
+              </span>
+            </div>
+            <h3 className="mb-6 text-2xl font-bold tracking-tight text-primary">
+              오시는 길
+            </h3>
+            <div className="overflow-hidden rounded-2xl border border-border">
+              <NaverMap />
             </div>
           </div>
         </section>

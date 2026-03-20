@@ -76,9 +76,9 @@ export default function HeroSection() {
         style={{ opacity, scale }}
       >
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid min-h-screen grid-cols-1 items-center gap-8 py-24 lg:grid-cols-2 lg:gap-16">
+          <div className="grid min-h-screen grid-cols-1 items-center gap-4 py-20 sm:gap-8 sm:py-24 lg:grid-cols-2 lg:gap-16">
             {/* Left: Text content */}
-            <motion.div style={{ y }} className="relative z-10 pt-16 lg:pt-0">
+            <motion.div style={{ y }} className="relative z-10 pt-4 lg:pt-0">
               {/* Badge */}
               <motion.div
                 custom={0.3}
@@ -225,7 +225,7 @@ export default function HeroSection() {
             {/* Right: 3D Marble Slab */}
             <motion.div
               style={{ y: marbleY }}
-              className="relative hidden h-[500px] lg:block lg:h-[600px] -mr-16 xl:-mr-24"
+              className="relative order-first h-[220px] sm:h-[300px] lg:order-none lg:h-[500px] xl:h-[600px] lg:-mr-16 xl:-mr-24"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}

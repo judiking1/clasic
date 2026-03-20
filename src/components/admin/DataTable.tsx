@@ -203,9 +203,9 @@ export default function DataTable<T extends { id: string }>({
   return (
     <div className="flex flex-col gap-0 rounded-lg border border-gray-200 bg-white shadow-sm">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-gray-200 px-4 py-3">
+      <div className="flex flex-col gap-3 border-b border-gray-200 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:py-3">
         {/* Search */}
-        <div className="relative w-full sm:w-72">
+        <div className="relative w-full sm:w-60 lg:w-72">
           <svg
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
             fill="none"
@@ -228,13 +228,13 @@ export default function DataTable<T extends { id: string }>({
           />
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           {/* Custom filters */}
           {filters}
 
           {/* Page size selector */}
           <div className="flex items-center gap-2">
-            <label htmlFor="pageSize" className="text-sm text-gray-600 whitespace-nowrap">
+            <label htmlFor="pageSize" className="hidden text-sm text-gray-600 whitespace-nowrap sm:block">
               표시 개수
             </label>
             <select
@@ -253,7 +253,7 @@ export default function DataTable<T extends { id: string }>({
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="sticky top-0 z-[1] border-b border-gray-200 bg-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-600">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -265,7 +265,7 @@ export default function DataTable<T extends { id: string }>({
                     <th
                       key={header.id}
                       style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }}
-                      className={`px-4 py-3 ${canSort ? "cursor-pointer select-none hover:bg-gray-200" : ""}`}
+                      className={`px-3 py-2.5 sm:px-4 sm:py-3 ${canSort ? "cursor-pointer select-none hover:bg-gray-200" : ""}`}
                       onClick={canSort ? header.column.getToggleSortingHandler() : undefined}
                     >
                       <div className="flex items-center gap-1">
@@ -302,7 +302,7 @@ export default function DataTable<T extends { id: string }>({
               <tr>
                 <td
                   colSpan={allColumns.length}
-                  className="py-16 text-center text-sm text-gray-500"
+                  className="py-10 sm:py-16 text-center text-sm text-gray-500"
                 >
                   데이터가 없습니다
                 </td>
@@ -320,7 +320,7 @@ export default function DataTable<T extends { id: string }>({
                   }`}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3 text-gray-800">
+                    <td key={cell.id} className="px-3 py-2.5 sm:px-4 sm:py-3 text-gray-800">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -332,7 +332,7 @@ export default function DataTable<T extends { id: string }>({
       </div>
 
       {/* Pagination */}
-      <div className="border-t border-gray-200 px-2">
+      <div className="border-t border-gray-200 px-1 sm:px-2">
         <Pagination
           page={page}
           totalPages={totalPages}

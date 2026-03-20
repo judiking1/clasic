@@ -48,7 +48,7 @@ export default function ActivityLogsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">활동 로그</h1>
+      <h1 className="text-xl font-bold text-gray-900 mb-6 sm:text-2xl sm:mb-8">활동 로그</h1>
 
       <div className="bg-white rounded-lg shadow">
         {/* Filters */}
@@ -99,7 +99,7 @@ export default function ActivityLogsPage() {
               활동 로그가 없습니다.
             </div>
           ) : (
-            <table className="w-full text-left text-sm">
+            <table className="w-full min-w-[640px] text-left text-sm">
               <thead className="border-b border-gray-200 bg-gray-50 text-xs font-semibold uppercase tracking-wide text-gray-600">
                 <tr>
                   <th className="px-4 py-3">시간</th>

@@ -56,25 +56,34 @@ export function ContactInfo() {
         </div>
       </div>
 
-      {/* Map Link Card */}
+      {/* Business Hours & Map Link */}
       <div className="rounded-2xl border border-accent/20 bg-accent/5 p-6">
-        <h3 className="mb-2 text-sm font-bold text-primary">
-          네이버 지도에서 보기
-        </h3>
-        <p className="mb-4 text-xs text-secondary">
-          길찾기 및 상세 위치를 확인하세요
-        </p>
+        <h3 className="mb-4 text-sm font-bold text-primary">영업 시간</h3>
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-secondary">월 - 금</span>
+            <span className="font-medium text-primary">09:00 - 18:00</span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-secondary">토요일</span>
+            <span className="font-medium text-primary">09:00 - 13:00</span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-secondary">일/공휴일</span>
+            <span className="font-medium text-destructive">휴무</span>
+          </div>
+        </div>
         <a
           href={SITE_CONFIG.naverMapUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:bg-accent-light hover:shadow-md"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#03C75A] px-5 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#02b351] hover:shadow-md"
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
           </svg>
-          지도 열기
+          네이버 지도에서 길찾기
         </a>
       </div>
     </div>

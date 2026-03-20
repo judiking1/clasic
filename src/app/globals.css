@@ -296,3 +296,95 @@ body {
 .animate-breathe {
   animation: breathe 4s ease-in-out infinite;
 }
+
+/* ---- View Transitions ---- */
+@supports (view-transition-name: auto) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.25, 0.4, 0.25, 1);
+  }
+}
+
+/* ---- Scroll Snap for galleries ---- */
+.scroll-snap-x {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap-x > * {
+  scroll-snap-align: start;
+}
+
+/* ---- Focus visible ring ---- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-shimmer,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-breathe {
+    animation: none !important;
+  }
+}
+
+/* ---- Print styles ---- */
+@media print {
+  header, footer, nav, .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* ---- Admin table responsive ---- */
+@media (max-width: 640px) {
+  .admin-table-wrap {
+    font-size: 13px;
+  }
+}
+
+/* ---- Smooth content appearance ---- */
+@keyframes content-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-content-appear {
+  animation: content-appear 0.4s cubic-bezier(0.25, 0.4, 0.25, 1) forwards;
+}
+
+/* ---- Touch target size (mobile accessibility) ---- */
+@media (pointer: coarse) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  input, select, textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}

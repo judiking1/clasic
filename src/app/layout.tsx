@@ -61,6 +61,14 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_CONFIG.name} | 인조대리석 전문 시공`,
+    description: SITE_CONFIG.description,
+  },
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
@@ -85,12 +93,17 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
+              "@id": process.env.NEXT_PUBLIC_SITE_URL || "https://clasic.kr",
               name: SITE_CONFIG.name,
               description: SITE_CONFIG.description,
               telephone: SITE_CONFIG.phone,
+              email: SITE_CONFIG.email,
+              url: process.env.NEXT_PUBLIC_SITE_URL || "https://clasic.kr",
               address: {
                 "@type": "PostalAddress",
                 streetAddress: SITE_CONFIG.address,
+                addressLocality: "남양주시",
+                addressRegion: "경기도",
                 addressCountry: "KR",
               },
               geo: {
@@ -98,6 +111,23 @@ export default function RootLayout({
                 latitude: SITE_CONFIG.latitude,
                 longitude: SITE_CONFIG.longitude,
               },
+              openingHoursSpecification: [
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                  opens: "09:00",
+                  closes: "18:00",
+                },
+                {
+                  "@type": "OpeningHoursSpecification",
+                  dayOfWeek: "Saturday",
+                  opens: "09:00",
+                  closes: "13:00",
+                },
+              ],
+              priceRange: "$$",
+              image: `${process.env.NEXT_PUBLIC_SITE_URL || "https://clasic.kr"}/og-image.jpg`,
+              sameAs: [SITE_CONFIG.naverMapUrl],
             }),
           }}
         />

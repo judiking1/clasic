@@ -60,17 +60,17 @@ export default function AdminSettingsPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">설정</h1>
+        <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">설정</h1>
       </div>
 
       {/* Admin User Management */}
       <div className="bg-white rounded-lg shadow mb-8">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">관리자 계정 관리</h2>
           <button
             type="button"
             onClick={() => setShowRegister(!showRegister)}
-            className="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+            className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap"
           >
             {showRegister ? "취소" : "새 관리자 추가"}
           </button>
@@ -164,25 +164,25 @@ export default function AdminSettingsPage() {
               등록된 관리자가 없습니다. 현재 환경변수 기반 인증을 사용 중입니다.
             </div>
           ) : (
-            <table className="w-full">
+            <table className="w-full min-w-[700px]">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     이름
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     이메일
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     권한
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     상태
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     마지막 로그인
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                     관리
                   </th>
                 </tr>
@@ -190,13 +190,13 @@ export default function AdminSettingsPage() {
               <tbody className="divide-y divide-gray-200">
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm font-medium text-gray-900">
                       {user.name}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500">
                       {user.email}
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           user.role === "superadmin"
@@ -207,7 +207,7 @@ export default function AdminSettingsPage() {
                         {user.role === "superadmin" ? "최고관리자" : "관리자"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           user.isActive
@@ -218,10 +218,10 @@ export default function AdminSettingsPage() {
                         {user.isActive ? "활성" : "비활성"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500">
                       {user.lastLoginAt ? formatDate(user.lastLoginAt) : "-"}
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
@@ -311,10 +311,10 @@ export default function AdminSettingsPage() {
 
       {/* System Info */}
       <div className="bg-white rounded-lg shadow">
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">시스템 정보</h2>
         </div>
-        <div className="px-6 py-4 space-y-3">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 space-y-3">
           <div className="flex items-center justify-between py-2 border-b border-gray-100">
             <span className="text-sm text-gray-600">프레임워크</span>
             <span className="text-sm font-medium text-gray-900">Next.js 16</span>

@@ -170,12 +170,17 @@ function MarbleSlab() {
     []
   );
 
-  useFrame((state) => {
+  useFrame((state, delta) => {
     uniforms.uTime.value = state.clock.elapsedTime;
     uniforms.uMouse.value.set(
       THREE.MathUtils.lerp(uniforms.uMouse.value.x, pointer.x, 0.03),
       THREE.MathUtils.lerp(uniforms.uMouse.value.y, pointer.y, 0.03)
     );
+
+    // Slow auto-rotation
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * 0.1;
+    }
   });
 
   return (
@@ -240,7 +245,7 @@ export default function MarbleHero() {
         }
       >
         <Canvas
-          dpr={[1, 1.5]}
+          dpr={[1, 1.2]}
           camera={{ position: [0, 2.5, 6.5], fov: 38 }}
           gl={{ antialias: true, alpha: true }}
           className="!absolute inset-0"
@@ -250,7 +255,7 @@ export default function MarbleHero() {
       </Suspense>
 
       {/* Interaction hint */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 backdrop-blur-sm">
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 backdrop-blur-sm sm:bottom-4 sm:px-4 sm:py-2">
         <svg className="h-4 w-4 text-white/40 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
         </svg>

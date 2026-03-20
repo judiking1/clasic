@@ -21,49 +21,49 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">대시보드</h1>
+      <h1 className="text-xl font-bold text-gray-900 mb-6 sm:text-2xl sm:mb-8">대시보드</h1>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-4 mb-6 sm:mb-8">
         <Link
           href="/admin/portfolio"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+          className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow group"
         >
           <p className="text-sm font-medium text-gray-500">전체 시공사례</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-amber-600 transition-colors">
+          <p className="text-2xl font-bold text-gray-900 mt-1 sm:mt-2 sm:text-3xl group-hover:text-amber-600 transition-colors">
             {portfolioCount}
           </p>
         </Link>
         <Link
           href="/admin/samples"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+          className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow group"
         >
           <p className="text-sm font-medium text-gray-500">전체 샘플</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-amber-600 transition-colors">
+          <p className="text-2xl font-bold text-gray-900 mt-1 sm:mt-2 sm:text-3xl group-hover:text-amber-600 transition-colors">
             {sampleCount}
           </p>
         </Link>
         <Link
           href="/admin/inquiries"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+          className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow group"
         >
           <p className="text-sm font-medium text-gray-500">전체 문의</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2 group-hover:text-amber-600 transition-colors">
+          <p className="text-2xl font-bold text-gray-900 mt-1 sm:mt-2 sm:text-3xl group-hover:text-amber-600 transition-colors">
             {inquiryCount}
           </p>
         </Link>
         <Link
           href="/admin/inquiries?isRead=false"
-          className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
+          className="bg-white rounded-lg shadow p-4 sm:p-6 hover:shadow-md transition-shadow group"
         >
           <p className="text-sm font-medium text-gray-500">읽지 않은 문의</p>
-          <p className="text-3xl font-bold text-red-600 mt-2">{unreadCount}</p>
+          <p className="text-2xl font-bold text-red-600 mt-1 sm:mt-2 sm:text-3xl">{unreadCount}</p>
         </Link>
       </div>
 
       {/* Recent Inquiries */}
       <div className="bg-white rounded-lg shadow mb-8">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+        <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-gray-900">최근 문의</h2>
           <Link
             href="/admin/inquiries"
@@ -73,22 +73,22 @@ export default async function AdminDashboardPage() {
           </Link>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   이름
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   연락처
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   유형
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   상태
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="px-3 py-2.5 sm:px-6 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   날짜
                 </th>
               </tr>
@@ -100,7 +100,7 @@ export default async function AdminDashboardPage() {
                 );
                 return (
                   <tr key={inquiry.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm text-gray-900">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-900">
                       <Link
                         href={`/admin/inquiries/${inquiry.id}`}
                         className="hover:text-amber-600 font-medium transition"
@@ -108,13 +108,13 @@ export default async function AdminDashboardPage() {
                         {inquiry.name}
                       </Link>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500">
                       {formatPhone(inquiry.phone)}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500">
                       {type?.label ?? inquiry.inquiryType}
                     </td>
-                    <td className="px-6 py-4 text-sm">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm">
                       <span
                         className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
                           inquiry.isRead
@@ -125,7 +125,7 @@ export default async function AdminDashboardPage() {
                         {inquiry.isRead ? "읽음" : "새 문의"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
+                    <td className="px-3 py-3 sm:px-6 sm:py-4 text-sm text-gray-500">
                       {formatDate(inquiry.createdAt)}
                     </td>
                   </tr>
@@ -147,7 +147,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Quick Links */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <Link
           href="/admin/portfolio/new"
           className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow group"
