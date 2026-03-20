@@ -20,9 +20,9 @@ export default function CLSLogo({
   };
 
   const s = sizeMap[size];
-  // light variant (for dark backgrounds) = dark_logo (white marble on dark)
-  // dark variant (for light backgrounds) = light_logo (black/gold on light)
-  const src = variant === "light" ? "/logo-dark.webp" : "/logo-light.webp";
+  // light variant (for dark backgrounds) = light_logo (밝은 대리석)
+  // dark variant (for light backgrounds) = dark_logo (어두운 대리석)
+  const src = variant === "light" ? "/logo-light.webp" : "/logo-dark.webp";
 
   return (
     <Image
