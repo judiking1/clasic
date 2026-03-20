@@ -225,7 +225,7 @@ export default function HeroSection() {
             {/* Right: 3D Marble Slab */}
             <motion.div
               style={{ y: marbleY }}
-              className="relative order-first h-[220px] sm:h-[300px] lg:order-none lg:h-[500px] xl:h-[600px] lg:-mr-16 xl:-mr-24"
+              className="relative order-last h-[220px] sm:h-[300px] lg:order-none lg:h-[500px] xl:h-[600px] lg:-mr-16 xl:-mr-24"
             >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
