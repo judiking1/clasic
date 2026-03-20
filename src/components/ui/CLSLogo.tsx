@@ -32,6 +32,7 @@ export default function CLSLogo({
       height={s.height}
       className={`object-contain ${className}`}
       priority
+      unoptimized
     />
   );
 }
