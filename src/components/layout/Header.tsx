@@ -78,146 +78,148 @@ export default function Header() {
   }, []);
 
   return (
-    <motion.header
-      animate={{
-        y: isHidden && !isMobileOpen ? "-100%" : "0%",
-      }}
-      transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-        useDarkText
-          ? "bg-background/90 backdrop-blur-2xl border-b border-border/30"
-          : "bg-transparent"
-      )}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between lg:h-20">
-          {/* Logo */}
-          <Link href="/" className="group flex items-center gap-2">
-            <CLSLogo
-              size="sm"
-              variant={useDarkText ? "dark" : "light"}
-            />
-            <div className="flex flex-col">
-              <span
-                className={cn(
-                  "text-base font-bold tracking-tight transition-colors duration-300 leading-tight lg:text-lg",
-                  useDarkText ? "text-primary" : "text-white"
-                )}
-              >
-                클래식
-              </span>
-              <span className={cn(
-                "text-[8px] font-medium tracking-[0.3em] uppercase transition-colors duration-300",
-                useDarkText ? "text-accent/60" : "text-accent/50"
-              )}>
-                Marble
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-1 lg:flex">
-            {NAV_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
+    <>
+      <motion.header
+        animate={{
+          y: isHidden && !isMobileOpen ? "-100%" : "0%",
+        }}
+        transition={{ duration: 0.3, ease: [0.25, 0.4, 0.25, 1] }}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+          useDarkText
+            ? "bg-background/90 backdrop-blur-2xl border-b border-border/30"
+            : "bg-transparent"
+        )}
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between lg:h-20">
+            {/* Logo */}
+            <Link href="/" className="group flex items-center gap-2">
+              <CLSLogo
+                size="sm"
+                variant={useDarkText ? "dark" : "light"}
+              />
+              <div className="flex flex-col">
+                <span
                   className={cn(
-                    "relative px-4 py-2 text-[13px] font-medium transition-colors duration-300",
-                    useDarkText
-                      ? isActive
-                        ? "text-accent"
-                        : "text-primary/60 hover:text-primary"
-                      : isActive
-                        ? "text-accent"
-                        : "text-white/60 hover:text-white"
+                    "text-base font-bold tracking-tight transition-colors duration-300 leading-tight lg:text-lg",
+                    useDarkText ? "text-primary" : "text-white"
                   )}
                 >
-                  {item.label}
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-underline"
-                      className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
-
-            {/* CTA */}
-            <Link
-              href="/contact"
-              className={cn(
-                "ml-4 rounded-full px-5 py-2 text-xs font-semibold transition-all duration-500",
-                useDarkText
-                  ? "bg-accent text-white hover:shadow-lg hover:shadow-accent/20"
-                  : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
-              )}
-            >
-              견적 문의
+                  클래식
+                </span>
+                <span className={cn(
+                  "text-[8px] font-medium tracking-[0.3em] uppercase transition-colors duration-300",
+                  useDarkText ? "text-accent/60" : "text-accent/50"
+                )}>
+                  Marble
+                </span>
+              </div>
             </Link>
 
-            {isAdmin && (
+            {/* Desktop Navigation */}
+            <nav className="hidden items-center gap-1 lg:flex">
+              {NAV_ITEMS.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "relative px-4 py-2 text-[13px] font-medium transition-colors duration-300",
+                      useDarkText
+                        ? isActive
+                          ? "text-accent"
+                          : "text-primary/60 hover:text-primary"
+                        : isActive
+                          ? "text-accent"
+                          : "text-white/60 hover:text-white"
+                    )}
+                  >
+                    {item.label}
+                    {isActive && (
+                      <motion.div
+                        layoutId="nav-underline"
+                        className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+
+              {/* CTA */}
               <Link
-                href="/admin"
+                href="/contact"
                 className={cn(
-                  "ml-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300",
+                  "ml-4 rounded-full px-5 py-2 text-xs font-semibold transition-all duration-500",
                   useDarkText
-                    ? "bg-primary text-white hover:bg-primary/80"
+                    ? "bg-accent text-white hover:shadow-lg hover:shadow-accent/20"
                     : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
                 )}
               >
-                관리자
+                견적 문의
               </Link>
-            )}
-          </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            className={cn(
-              "relative flex h-10 w-10 items-center justify-center lg:hidden",
-              useDarkText ? "text-primary" : "text-white"
-            )}
-            aria-label="메뉴"
-          >
-            <div className="flex h-4 w-5 flex-col justify-between">
-              <motion.span
-                animate={{
-                  rotate: isMobileOpen ? 45 : 0,
-                  y: isMobileOpen ? 7 : 0,
-                }}
-                className={cn(
-                  "block h-[1.5px] w-full origin-center transition-colors",
-                  useDarkText ? "bg-primary" : "bg-white"
-                )}
-              />
-              <motion.span
-                animate={{ opacity: isMobileOpen ? 0 : 1 }}
-                className={cn(
-                  "block h-[1.5px] w-3/4 transition-colors",
-                  useDarkText ? "bg-primary" : "bg-white"
-                )}
-              />
-              <motion.span
-                animate={{
-                  rotate: isMobileOpen ? -45 : 0,
-                  y: isMobileOpen ? -7 : 0,
-                }}
-                className={cn(
-                  "block h-[1.5px] w-full origin-center transition-colors",
-                  useDarkText ? "bg-primary" : "bg-white"
-                )}
-              />
-            </div>
-          </button>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "ml-2 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300",
+                    useDarkText
+                      ? "bg-primary text-white hover:bg-primary/80"
+                      : "bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
+                  )}
+                >
+                  관리자
+                </Link>
+              )}
+            </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileOpen(!isMobileOpen)}
+              className={cn(
+                "relative flex h-10 w-10 items-center justify-center lg:hidden",
+                useDarkText ? "text-primary" : "text-white"
+              )}
+              aria-label="메뉴"
+            >
+              <div className="flex h-4 w-5 flex-col justify-between">
+                <motion.span
+                  animate={{
+                    rotate: isMobileOpen ? 45 : 0,
+                    y: isMobileOpen ? 7 : 0,
+                  }}
+                  className={cn(
+                    "block h-[1.5px] w-full origin-center transition-colors",
+                    useDarkText ? "bg-primary" : "bg-white"
+                  )}
+                />
+                <motion.span
+                  animate={{ opacity: isMobileOpen ? 0 : 1 }}
+                  className={cn(
+                    "block h-[1.5px] w-3/4 transition-colors",
+                    useDarkText ? "bg-primary" : "bg-white"
+                  )}
+                />
+                <motion.span
+                  animate={{
+                    rotate: isMobileOpen ? -45 : 0,
+                    y: isMobileOpen ? -7 : 0,
+                  }}
+                  className={cn(
+                    "block h-[1.5px] w-full origin-center transition-colors",
+                    useDarkText ? "bg-primary" : "bg-white"
+                  )}
+                />
+              </div>
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.header>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - OUTSIDE header to avoid backdrop-filter containing block issue */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div
@@ -225,7 +227,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-16 z-[60] bg-background backdrop-blur-none lg:hidden"
+            className="fixed inset-0 top-16 z-[60] bg-background lg:hidden"
           >
             <nav className="flex h-full flex-col items-center justify-center gap-1 px-8">
               {NAV_ITEMS.map((item, i) => (
@@ -267,6 +269,6 @@ export default function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.header>
+    </>
   );
 }
