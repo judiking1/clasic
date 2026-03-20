@@ -207,11 +207,10 @@ function Scene() {
       <PresentationControls
         global
         rotation={[0.15, 0.1, 0]}
-        polar={[-0.6, 0.5]}
-        azimuth={[-1.4, 1.4]}
-        speed={2}
+        polar={[-Math.PI / 2, Math.PI / 2]}
+        azimuth={[-Infinity, Infinity]}
+        speed={1.5}
         zoom={1}
-        snap={true}
       >
         <MarbleSlab />
       </PresentationControls>
