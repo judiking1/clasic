@@ -94,6 +94,7 @@ const columns: ColumnDef<Sample, unknown>[] = [
       <div className="flex items-center gap-2">
         <Link
           href={`/admin/samples/${row.original.id}/edit`}
+          prefetch={false}
           className="inline-flex px-3 py-1.5 text-sm font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition"
         >
           수정

@@ -37,6 +37,7 @@ const columns: ColumnDef<Inquiry, unknown>[] = [
     cell: ({ row }) => (
       <Link
         href={`/admin/inquiries/${row.original.id}`}
+        prefetch={false}
         className="font-medium text-gray-900 hover:text-amber-600 transition"
       >
         {row.original.name}
@@ -82,6 +83,7 @@ const columns: ColumnDef<Inquiry, unknown>[] = [
       <div className="flex items-center gap-2">
         <Link
           href={`/admin/inquiries/${row.original.id}`}
+          prefetch={false}
           className="inline-flex px-3 py-1.5 text-sm font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition"
         >
           보기

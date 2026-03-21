@@ -47,7 +47,13 @@ const columns: ColumnDef<PortfolioWithImages, unknown>[] = [
     accessorKey: "title",
     header: "제목",
     cell: ({ row }) => (
-      <span className="font-medium text-gray-900">{row.original.title}</span>
+      <Link
+        href={`/admin/portfolio/${row.original.id}/edit`}
+        prefetch={false}
+        className="font-medium text-gray-900 hover:text-amber-600 transition-colors"
+      >
+        {row.original.title}
+      </Link>
     ),
     enableSorting: true,
   },
@@ -96,12 +102,14 @@ const columns: ColumnDef<PortfolioWithImages, unknown>[] = [
       <div className="flex items-center gap-2">
         <Link
           href={`/admin/portfolio/${row.original.id}/edit`}
+          prefetch={false}
           className="inline-flex px-3 py-1.5 text-sm font-medium text-amber-600 bg-amber-50 hover:bg-amber-100 rounded-lg transition"
         >
           수정
         </Link>
         <Link
           href={`/portfolio/${row.original.id}`}
+          prefetch={false}
           target="_blank"
           className="inline-flex px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg transition"
         >
