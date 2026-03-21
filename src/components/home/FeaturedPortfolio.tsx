@@ -173,7 +173,7 @@ function PortfolioCard({
           {/* Content at bottom */}
           <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
             {portfolio.category && (
-              <span className="mb-2 inline-block text-[10px] font-medium tracking-[0.2em] uppercase text-accent">
+              <span className="mb-2 inline-block text-[11px] font-medium tracking-[0.2em] uppercase text-accent">
                 {portfolio.category}
               </span>
             )}

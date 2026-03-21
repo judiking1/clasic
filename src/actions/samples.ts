@@ -130,7 +130,7 @@ async function _getSamples(filters?: {
 export const getSamples = unstable_cache(
   _getSamples,
   ["samples-list"],
-  { revalidate: 60, tags: ["samples"] }
+  { revalidate: false, tags: ["samples"] }
 );
 
 export async function getSamplesPaginated(params: {

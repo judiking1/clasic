@@ -43,11 +43,11 @@ export default function ProcessSection() {
   const lineProgress = useTransform(scrollYProgress, [0.1, 0.7], ["0%", "100%"]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-primary py-32 sm:py-40">
+    <section ref={sectionRef} className="relative overflow-hidden bg-cream py-32 sm:py-40">
       {/* Ambient */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(184,149,106,0.08)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_70%,rgba(184,149,106,0.06)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(184,149,106,0.06)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_70%,rgba(184,149,106,0.04)_0%,transparent_50%)]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -66,7 +66,7 @@ export default function ProcessSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
+            className="text-3xl font-bold tracking-tight text-primary sm:text-4xl md:text-5xl"
           >
             시공 프로세스
           </motion.h2>
@@ -82,7 +82,7 @@ export default function ProcessSection() {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="mx-auto mt-6 max-w-lg text-base text-white/40"
+            className="mx-auto mt-6 max-w-lg text-base text-secondary"
           >
             상담부터 시공까지, 체계적인 4단계 프로세스로 완벽한 결과를 보장합니다
           </motion.p>
@@ -91,9 +91,9 @@ export default function ProcessSection() {
         {/* Process steps */}
         <div className="relative">
           {/* Connecting line (desktop) */}
-          <div className="absolute left-0 right-0 top-[3.5rem] hidden h-px bg-white/[0.06] lg:block">
+          <div className="absolute left-0 right-0 top-[3.5rem] hidden h-px bg-border/60 lg:block">
             <motion.div
-              className="h-full bg-accent/40 origin-left"
+              className="h-full bg-accent/60 origin-left"
               style={{ width: lineProgress }}
             />
           </div>
@@ -116,7 +116,7 @@ export default function ProcessSection() {
                 <div className="relative z-10 mb-8 flex items-center gap-4 lg:justify-center">
                   <div className={cn(
                     "flex h-14 w-14 items-center justify-center rounded-full",
-                    "border border-white/10 bg-white/[0.03] backdrop-blur-sm",
+                    "border border-border/60 bg-white",
                     "transition-all duration-700",
                     "group-hover:border-accent/40 group-hover:bg-accent/10"
                   )}>
@@ -128,18 +128,18 @@ export default function ProcessSection() {
 
                 {/* Content */}
                 <div className="lg:text-center">
-                  <h3 className="mb-3 text-xl font-bold text-white">
+                  <h3 className="mb-3 text-xl font-bold text-primary">
                     {step.title}
                   </h3>
 
-                  <p className="mb-4 text-sm leading-relaxed text-white/40">
+                  <p className="mb-4 text-sm leading-relaxed text-secondary">
                     {step.description}
                   </p>
 
                   {/* Detail tag */}
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/5 px-3 py-1">
                     <span className="h-1 w-1 rounded-full bg-accent" />
-                    <span className="text-[10px] font-medium tracking-wider text-accent/80">
+                    <span className="text-[11px] font-medium tracking-wider text-accent/80">
                       {step.detail}
                     </span>
                   </span>

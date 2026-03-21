@@ -21,12 +21,12 @@ const columns: ColumnDef<PortfolioWithImages, unknown>[] = [
     header: "썸네일",
     cell: ({ row }) => {
       const portfolio = row.original;
-      const firstImage = portfolio.images?.[0];
+      const thumbnail = portfolio.thumbnailUrl || portfolio.images?.[0]?.imageUrl;
       return (
         <div className="w-16 h-12 relative rounded overflow-hidden bg-gray-100 flex-shrink-0">
-          {firstImage ? (
+          {thumbnail ? (
             <Image
-              src={firstImage.imageUrl}
+              src={thumbnail}
               alt={portfolio.title}
               fill
               className="object-cover"

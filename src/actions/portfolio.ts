@@ -196,11 +196,11 @@ async function _getPortfoliosPublic(
   }
 }
 
-// Cache for 60 seconds, revalidated on-demand via updateTag
+// Cache indefinitely — only invalidated when admin creates/updates/deletes
 export const getPortfoliosPublic = unstable_cache(
   _getPortfoliosPublic,
   ["portfolios-public"],
-  { revalidate: 60, tags: ["portfolios"] }
+  { revalidate: false, tags: ["portfolios"] }
 );
 
 async function _getPortfolio(
@@ -227,12 +227,12 @@ async function _getPortfolio(
 }
 
 // React.cache() deduplicates within a single request (metadata + page)
-// unstable_cache() caches across requests for 60 seconds
+// unstable_cache() caches indefinitely — invalidated on admin mutation
 export const getPortfolio = cache(
   (id: string) => unstable_cache(
     () => _getPortfolio(id),
     [`portfolio-${id}`],
-    { revalidate: 60, tags: ["portfolios", `portfolio-${id}`] }
+    { revalidate: false, tags: ["portfolios", `portfolio-${id}`] }
   )()
 );
 
@@ -277,21 +277,10 @@ export async function getPortfoliosPaginated(params: {
       .limit(pageSize)
       .offset(offset);
 
-    const ids = rows.map((r) => r.id);
-    const allImages = ids.length > 0
-      ? await db.select().from(portfolioImages).where(inArray(portfolioImages.portfolioId, ids)).orderBy(portfolioImages.sortOrder)
-      : [];
-
-    const imageMap = new Map<string, typeof allImages>();
-    for (const img of allImages) {
-      const arr = imageMap.get(img.portfolioId) ?? [];
-      arr.push(img);
-      imageMap.set(img.portfolioId, arr);
-    }
-
+    // Admin table only uses thumbnailUrl — skip fetching all images
     const data: PortfolioWithImages[] = rows.map((p) => ({
       ...p,
-      images: imageMap.get(p.id) ?? [],
+      images: [],
     }));
 
     return { data, total, page, pageSize, totalPages: Math.ceil(total / pageSize) };
@@ -359,5 +348,5 @@ async function _getFeaturedPortfolios(): Promise<PortfolioWithImages[]> {
 export const getFeaturedPortfolios = unstable_cache(
   _getFeaturedPortfolios,
   ["featured-portfolios"],
-  { revalidate: 60, tags: ["portfolios"] }
+  { revalidate: false, tags: ["portfolios"] }
 );

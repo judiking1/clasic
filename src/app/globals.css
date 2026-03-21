@@ -1,23 +1,45 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* ── Color Palette ── */
+  /* Primitive: Marble (warm whites & neutrals) */
   --color-background: #fafaf8;
   --color-foreground: #1a1a2e;
-  --color-primary: #0a0a0a;
-  --color-primary-foreground: #fafaf8;
-  --color-secondary: #636e72;
-  --color-accent: #b8956a;
-  --color-accent-light: #d4b896;
-  --color-accent-foreground: #1a1a2e;
   --color-muted: #f5f5f0;
   --color-muted-foreground: #636e72;
-  --color-border: #e0ddd5;
-  --color-destructive: #e74c3c;
-  --color-success: #27ae60;
   --color-stone-warm: #f5f0ea;
   --color-cream: #faf7f2;
+  --color-border: #e0ddd5;
+
+  /* Primitive: Charcoal (dark tones) */
+  --color-primary: #0a0a0a;
+  --color-primary-foreground: #fafaf8;
+
+  /* Primitive: Gold (accent system) */
+  --color-accent: #b8956a;
+  --color-accent-light: #d4b896;
+  --color-accent-dark: #a07a52;
+  --color-accent-foreground: #1a1a2e;
+
+  /* Semantic: Text */
+  --color-secondary: #636e72;
+
+  /* Semantic: Status */
+  --color-destructive: #e74c3c;
+  --color-success: #27ae60;
+
+  /* ── Typography ── */
   --font-sans: var(--font-noto-sans-kr);
   --font-serif: var(--font-playfair);
+
+  /* ── Elevation (box-shadow) ── */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(184, 149, 106, 0.03);
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(184, 149, 106, 0.06);
+  --shadow-cta: 0 8px 32px rgba(184, 149, 106, 0.25);
+
+  /* ── Transition ── */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-gentle: cubic-bezier(0.25, 0.4, 0.25, 1);
 }
 
 /* ---- Base ---- */

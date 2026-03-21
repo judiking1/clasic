@@ -33,17 +33,17 @@ export default function MarqueeSection() {
           items={services}
           separator={"  \u2014  "}
           speed={45}
-          className="text-[3rem] sm:text-[4rem] md:text-[5rem] font-black text-primary/[0.03] leading-none select-none"
+          className="text-[3rem] sm:text-[4rem] md:text-[5rem] font-black text-primary/[0.06] leading-none select-none"
         />
       </motion.div>
 
-      <motion.div style={{ x: x2 }} className="mt-3">
+      <motion.div style={{ x: x2 }} className="mt-4">
         <Marquee
           items={services}
           separator={"  \u00b7  "}
           speed={35}
           reverse
-          className="text-sm sm:text-base font-medium tracking-[0.4em] uppercase text-accent/40"
+          className="text-sm sm:text-base font-medium tracking-[0.3em] uppercase text-accent/50"
         />
       </motion.div>
 

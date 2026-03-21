@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local database
 local.db
+
+# claude code skills (dev tools)
+.claude/skills/

@@ -139,7 +139,7 @@ export default function ServicesSection() {
                       {service.icon}
                     </div>
 
-                    <p className="relative mb-2 text-[10px] font-medium tracking-[0.2em] uppercase text-accent/70">
+                    <p className="relative mb-2 text-[11px] font-medium tracking-[0.2em] uppercase text-accent/70">
                       {service.titleEn}
                     </p>
 

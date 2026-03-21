@@ -36,12 +36,17 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
     PORTFOLIO_CATEGORIES.find((c) => c.value === portfolio.category)?.label ||
     portfolio.category;
 
+  // Preserve category filter when navigating back to list
+  const backHref = portfolio.category && portfolio.category !== "all"
+    ? `/portfolio?category=${portfolio.category}`
+    : "/portfolio";
+
   return (
     <main className="min-h-screen bg-background pt-20 lg:pt-24">
       <article className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Back Link */}
         <Link
-          href="/portfolio"
+          href={backHref}
           className="group mb-10 inline-flex items-center gap-2 text-sm font-medium text-secondary transition-colors hover:text-primary"
         >
           <svg
@@ -104,7 +109,7 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
         {/* Back Link Bottom */}
         <div className="mt-12 text-center">
           <Link
-            href="/portfolio"
+            href={backHref}
             className="group inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium text-primary transition-all duration-300 hover:border-accent/30 hover:bg-accent/5"
           >
             <svg

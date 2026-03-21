@@ -39,7 +39,7 @@ export default function CTASection() {
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2 backdrop-blur-sm">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-              <span className="text-[10px] font-medium tracking-[0.35em] uppercase text-white/60">
+              <span className="text-[11px] font-medium tracking-[0.3em] uppercase text-white/60">
                 Contact Us
               </span>
             </span>

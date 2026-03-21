@@ -89,7 +89,7 @@ export default function HeroSection() {
               >
                 <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 backdrop-blur-sm">
                   <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-glow" />
-                  <span className="text-[10px] font-medium tracking-[0.35em] text-white/60 uppercase">
+                  <span className="text-[11px] font-medium tracking-[0.3em] text-white/60 uppercase">
                     Premium Artificial Marble
                   </span>
                 </span>
@@ -252,7 +252,7 @@ export default function HeroSection() {
           transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
           className="flex flex-col items-center gap-3"
         >
-          <span className="text-[9px] font-light tracking-[0.4em] text-white/25 uppercase">
+          <span className="text-[11px] font-light tracking-[0.3em] text-white/25 uppercase">
             Scroll
           </span>
           <div className="h-12 w-[1px] bg-gradient-to-b from-accent/50 to-transparent" />
