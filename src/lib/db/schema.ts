@@ -58,11 +58,17 @@ export const adminUsers = sqliteTable("admin_users", {
   updatedAt: text("updated_at").notNull(),
 });
 
-// Page views - analytics
+// Page views - portfolio detail views
 export const pageViews = sqliteTable("page_views", {
   id: text("id").primaryKey(),
-  page: text("page").notNull(),       // e.g., "/portfolio/abc123", "/", "/samples"
+  page: text("page").notNull(),       // e.g., "/portfolio/abc123"
   viewedAt: text("viewed_at").notNull(),
+});
+
+// Site visits - unique visitor per session
+export const siteVisits = sqliteTable("site_visits", {
+  id: text("id").primaryKey(),
+  visitedAt: text("visited_at").notNull(),
 });
 
 // Activity logs - audit trail

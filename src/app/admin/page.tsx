@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { portfolios, samples, inquiries, pageViews } from "@/lib/db/schema";
+import { portfolios, samples, inquiries, pageViews, siteVisits } from "@/lib/db/schema";
 import { eq, sql, desc, gte } from "drizzle-orm";
 import { formatDate, formatPhone } from "@/lib/utils";
 import { INQUIRY_TYPES } from "@/lib/constants";
@@ -24,8 +24,8 @@ export default async function AdminDashboardPage() {
     db.select({ count: sql<number>`count(*)` }).from(samples),
     db.select({ count: sql<number>`count(*)` }).from(inquiries),
     db.select({ count: sql<number>`count(*)` }).from(inquiries).where(eq(inquiries.isRead, false)),
-    db.select({ count: sql<number>`count(*)` }).from(pageViews),
-    db.select({ count: sql<number>`count(*)` }).from(pageViews).where(gte(pageViews.viewedAt, todayStr)),
+    db.select({ count: sql<number>`count(*)` }).from(siteVisits).catch(() => [{ count: 0 }]),
+    db.select({ count: sql<number>`count(*)` }).from(siteVisits).where(gte(siteVisits.visitedAt, todayStr)).catch(() => [{ count: 0 }]),
     db.select().from(inquiries).orderBy(desc(inquiries.createdAt)).limit(5),
     db
       .select({ page: pageViews.page, views: sql<number>`count(*)` })
