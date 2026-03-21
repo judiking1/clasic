@@ -1,23 +1,23 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
-export function ViewTracker() {
-  const pathname = usePathname();
-  const lastTracked = useRef("");
-
+/**
+ * Tracks a single portfolio detail page view.
+ * Deduplicates within the same browser session (sessionStorage).
+ */
+export function ViewTracker({ portfolioId }: { portfolioId: string }) {
   useEffect(() => {
-    if (pathname === lastTracked.current) return;
-    lastTracked.current = pathname;
+    const key = `viewed:${portfolioId}`;
+    if (sessionStorage.getItem(key)) return; // already viewed this session
+    sessionStorage.setItem(key, "1");
 
-    // Fire-and-forget: don't block rendering
     fetch("/api/views", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ page: pathname }),
-    }).catch(() => {}); // silently ignore errors
-  }, [pathname]);
+      body: JSON.stringify({ page: `/portfolio/${portfolioId}` }),
+    }).catch(() => {});
+  }, [portfolioId]);
 
   return null;
 }

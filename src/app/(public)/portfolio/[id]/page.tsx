@@ -6,6 +6,7 @@ import { ImageCarousel } from "@/components/portfolio/ImageCarousel";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { PortfolioViewCount } from "@/components/portfolio/PortfolioViewCount";
+import { ViewTracker } from "@/components/analytics/ViewTracker";
 
 interface PortfolioDetailPageProps {
   params: Promise<{ id: string }>;
@@ -44,6 +45,7 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
 
   return (
     <main className="min-h-screen bg-background pt-20 lg:pt-24">
+      <ViewTracker portfolioId={portfolio.id} />
       <article className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Back Link */}
         <Link
