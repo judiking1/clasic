@@ -1,5 +1,3 @@
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
 import MarqueeSection from "@/components/home/MarqueeSection";
 import CompanyIntro from "@/components/home/CompanyIntro";
@@ -15,20 +13,16 @@ export default async function HomePage() {
   const featuredPortfolios = await getFeaturedPortfolios();
 
   return (
-    <>
-      <Header />
-      <main>
-        <HeroSection />
-        <MarqueeSection />
-        <CompanyIntro />
-        <ServicesSection />
-        <FeaturedPortfolio portfolios={featuredPortfolios} />
-        <ProcessSection />
-        <StatsCounter />
-        <TestimonialsSection />
-        <CTASection />
-      </main>
-      <Footer />
-    </>
+    <main>
+      <HeroSection />
+      <MarqueeSection />
+      <CompanyIntro />
+      <ServicesSection />
+      <FeaturedPortfolio portfolios={featuredPortfolios} />
+      <ProcessSection />
+      <StatsCounter />
+      <TestimonialsSection />
+      <CTASection />
+    </main>
   );
 }

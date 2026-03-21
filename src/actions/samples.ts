@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
+import { updateTag } from "next/cache";
 import { db } from "@/lib/db";
 import { samples } from "@/lib/db/schema";
 import { eq, desc, asc, like, or, and, sql, inArray } from "drizzle-orm";
@@ -34,6 +35,7 @@ export async function createSample(formData: FormData): Promise<ActionResult> {
       createdAt: new Date().toISOString(),
     });
 
+    updateTag("samples");
     revalidatePath("/samples");
     return { success: true, data: id };
   } catch (error) {
@@ -76,6 +78,7 @@ export async function updateSample(
       .set({ ...parsed.data, imageUrl })
       .where(eq(samples.id, id));
 
+    updateTag("samples");
     revalidatePath("/samples");
     return { success: true };
   } catch (error) {
@@ -96,6 +99,7 @@ export async function deleteSample(id: string): Promise<ActionResult> {
     }
 
     await db.delete(samples).where(eq(samples.id, id));
+    updateTag("samples");
     revalidatePath("/samples");
     return { success: true };
   } catch (error) {
@@ -104,7 +108,7 @@ export async function deleteSample(id: string): Promise<ActionResult> {
   }
 }
 
-export async function getSamples(filters?: {
+async function _getSamples(filters?: {
   brand?: string;
   colorCategory?: string;
 }): Promise<Sample[]> {
@@ -122,6 +126,12 @@ export async function getSamples(filters?: {
     return [];
   }
 }
+
+export const getSamples = unstable_cache(
+  _getSamples,
+  ["samples-list"],
+  { revalidate: 60, tags: ["samples"] }
+);
 
 export async function getSamplesPaginated(params: {
   page?: number;

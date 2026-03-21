@@ -76,7 +76,7 @@ export default function StatsCounter() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-3xl font-bold tracking-tight text-primary sm:text-4xl md:text-5xl"
           >
-            숫자로 보는 <span className="text-accent">클래식</span>
+            숫자로 보는 <span className="text-accent">클레식</span>
           </motion.h2>
 
           <motion.div

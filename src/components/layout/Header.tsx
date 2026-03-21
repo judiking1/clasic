@@ -105,7 +105,7 @@ export default function Header() {
                   useDarkText ? "text-primary" : "text-white"
                 )}
               >
-                클래식
+                클레식
               </span>
             </Link>
 

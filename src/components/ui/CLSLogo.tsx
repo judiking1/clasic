@@ -27,7 +27,7 @@ export default function CLSLogo({
   return (
     <Image
       src={src}
-      alt="클래식 로고"
+      alt="클레식 로고"
       width={s.width}
       height={s.height}
       className={`object-contain ${className}`}

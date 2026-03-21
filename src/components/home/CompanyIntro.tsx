@@ -69,7 +69,7 @@ export default function CompanyIntro() {
               transition={{ duration: 0.7, delay: 0.3 }}
               className="max-w-md text-base leading-relaxed text-secondary"
             >
-              클래식은 인조대리석 전문 업체로서 원자재 선별부터 정밀 가공, 현장 시공까지
+              클레식은 인조대리석 전문 업체로서 원자재 선별부터 정밀 가공, 현장 시공까지
               모든 과정을 직접 수행합니다. 중간 유통 없이 고객에게 최상의 품질을
               합리적인 가격에 제공합니다.
             </motion.p>

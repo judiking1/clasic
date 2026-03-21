@@ -1,6 +1,6 @@
 export const SITE_CONFIG = {
-  name: "클래식",
-  nameEn: "Classic",
+  name: "클레식",
+  nameEn: "Clasic",
   description:
     "인조대리석 싱크대, 세면대, 카운터 맞춤 제작 및 시공 전문 업체. 대리석 가공부터 시공까지 원스톱 서비스를 제공합니다.",
   owner: "이상남",

@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { getPortfolio } from "@/actions/portfolio";
 import { checkIsAdmin } from "@/actions/auth";
 import { ImageCarousel } from "@/components/portfolio/ImageCarousel";
@@ -39,14 +37,75 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
     portfolio.category;
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-background pt-20 lg:pt-24">
-        <article className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-          {/* Back Link */}
+    <main className="min-h-screen bg-background pt-20 lg:pt-24">
+      <article className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Back Link */}
+        <Link
+          href="/portfolio"
+          className="group mb-10 inline-flex items-center gap-2 text-sm font-medium text-secondary transition-colors hover:text-primary"
+        >
+          <svg
+            className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          시공사례 목록으로
+        </Link>
+
+        {/* Title & Meta */}
+        <div className="mb-10">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="inline-block rounded-full bg-accent/10 px-3 py-1 text-[10px] font-medium tracking-wider uppercase text-accent">
+              {categoryLabel}
+            </span>
+            <span className="text-xs text-secondary">
+              {formatDate(portfolio.createdAt)}
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl md:text-5xl">
+              {portfolio.title}
+            </h1>
+            {isAdmin && (
+              <Link
+                href={`/admin/portfolio/${portfolio.id}/edit`}
+                className="shrink-0 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-light transition-colors"
+              >
+                수정
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {/* Image Carousel */}
+        {portfolio.images.length > 0 && (
+          <div className="mb-12">
+            <ImageCarousel images={portfolio.images} />
+          </div>
+        )}
+
+        {/* Description */}
+        {portfolio.description && (
+          <div className="rounded-2xl border border-border bg-white p-8 sm:p-10">
+            <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-secondary">
+              상세 설명
+            </h2>
+            <div className="h-px w-12 bg-accent mb-6" />
+            <p className="whitespace-pre-wrap leading-relaxed text-primary/80">
+              {portfolio.description}
+            </p>
+          </div>
+        )}
+
+        {/* Back Link Bottom */}
+        <div className="mt-12 text-center">
           <Link
             href="/portfolio"
-            className="group mb-10 inline-flex items-center gap-2 text-sm font-medium text-secondary transition-colors hover:text-primary"
+            className="group inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium text-primary transition-all duration-300 hover:border-accent/30 hover:bg-accent/5"
           >
             <svg
               className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
@@ -57,75 +116,10 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
-            시공사례 목록으로
+            목록으로 돌아가기
           </Link>
-
-          {/* Title & Meta */}
-          <div className="mb-10">
-            <div className="mb-4 flex items-center gap-3">
-              <span className="inline-block rounded-full bg-accent/10 px-3 py-1 text-[10px] font-medium tracking-wider uppercase text-accent">
-                {categoryLabel}
-              </span>
-              <span className="text-xs text-secondary">
-                {formatDate(portfolio.createdAt)}
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl md:text-5xl">
-                {portfolio.title}
-              </h1>
-              {isAdmin && (
-                <Link
-                  href={`/admin/portfolio/${portfolio.id}/edit`}
-                  className="shrink-0 rounded-full bg-accent px-4 py-1.5 text-sm font-semibold text-white hover:bg-accent-light transition-colors"
-                >
-                  수정
-                </Link>
-              )}
-            </div>
-          </div>
-
-          {/* Image Carousel */}
-          {portfolio.images.length > 0 && (
-            <div className="mb-12">
-              <ImageCarousel images={portfolio.images} />
-            </div>
-          )}
-
-          {/* Description */}
-          {portfolio.description && (
-            <div className="rounded-2xl border border-border bg-white p-8 sm:p-10">
-              <h2 className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-secondary">
-                상세 설명
-              </h2>
-              <div className="h-px w-12 bg-accent mb-6" />
-              <p className="whitespace-pre-wrap leading-relaxed text-primary/80">
-                {portfolio.description}
-              </p>
-            </div>
-          )}
-
-          {/* Back Link Bottom */}
-          <div className="mt-12 text-center">
-            <Link
-              href="/portfolio"
-              className="group inline-flex items-center gap-2 rounded-full border border-border px-6 py-3 text-sm font-medium text-primary transition-all duration-300 hover:border-accent/30 hover:bg-accent/5"
-            >
-              <svg
-                className="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-              </svg>
-              목록으로 돌아가기
-            </Link>
-          </div>
-        </article>
-      </main>
-      <Footer />
-    </>
+        </div>
+      </article>
+    </main>
   );
 }

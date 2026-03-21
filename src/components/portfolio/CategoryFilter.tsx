@@ -15,6 +15,8 @@ export function CategoryFilter({ currentCategory }: CategoryFilterProps) {
 
   const handleCategoryChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
+    // Reset to page 1 when changing category
+    params.delete("page");
     if (value === "all") {
       params.delete("category");
     } else {

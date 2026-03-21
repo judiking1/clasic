@@ -1,6 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { cache } from "react";
+import { revalidatePath, unstable_cache } from "next/cache";
+import { updateTag } from "next/cache";
 import { db } from "@/lib/db";
 import { portfolios, portfolioImages } from "@/lib/db/schema";
 import { eq, desc, asc, like, or, and, sql, inArray } from "drizzle-orm";
@@ -50,6 +52,7 @@ export async function createPortfolio(
       await db.insert(portfolioImages).values(imageRecords);
     }
 
+    updateTag("portfolios");
     revalidatePath("/portfolio");
     revalidatePath("/");
     return { success: true, data: id };
@@ -112,6 +115,7 @@ export async function updatePortfolio(
       await db.insert(portfolioImages).values(imageRecords);
     }
 
+    updateTag("portfolios");
     revalidatePath("/portfolio");
     revalidatePath(`/portfolio/${id}`);
     revalidatePath("/");
@@ -145,6 +149,7 @@ export async function deletePortfolio(id: string): Promise<ActionResult> {
       .where(eq(portfolioImages.portfolioId, id));
     await db.delete(portfolios).where(eq(portfolios.id, id));
 
+    updateTag("portfolios");
     revalidatePath("/portfolio");
     revalidatePath("/");
     return { success: true };
@@ -154,37 +159,51 @@ export async function deletePortfolio(id: string): Promise<ActionResult> {
   }
 }
 
-export async function getPortfolios(
-  category?: string
-): Promise<PortfolioWithImages[]> {
-  try {
-    const allPortfolios = category && category !== "all"
-      ? await db
-          .select()
-          .from(portfolios)
-          .where(eq(portfolios.category, category))
-          .orderBy(desc(portfolios.createdAt))
-      : await db
-          .select()
-          .from(portfolios)
-          .orderBy(desc(portfolios.createdAt));
+// Public paginated listing — only returns thumbnailUrl (no images array)
+// to keep response small and cacheable
+async function _getPortfoliosPublic(
+  category?: string,
+  page?: number,
+  pageSize?: number
+): Promise<PaginatedResult<PortfolioWithImages>> {
+  const { page: p, pageSize: ps, offset } = getPaginationValues(page, pageSize);
+  const empty = { data: [], total: 0, page: p, pageSize: ps, totalPages: 0 };
 
-    const result: PortfolioWithImages[] = [];
-    for (const p of allPortfolios) {
-      const images = await db
-        .select()
-        .from(portfolioImages)
-        .where(eq(portfolioImages.portfolioId, p.id))
-        .orderBy(portfolioImages.sortOrder);
-      result.push({ ...p, images });
-    }
-    return result;
+  try {
+    const where = category && category !== "all"
+      ? eq(portfolios.category, category)
+      : undefined;
+
+    const [countResult] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(portfolios)
+      .where(where);
+    const total = countResult?.count ?? 0;
+    if (total === 0) return empty;
+
+    const rows = await db
+      .select()
+      .from(portfolios)
+      .where(where)
+      .orderBy(desc(portfolios.createdAt))
+      .limit(ps)
+      .offset(offset);
+
+    const data = rows.map((p) => ({ ...p, images: [] }));
+    return { data, total, page: p, pageSize: ps, totalPages: Math.ceil(total / ps) };
   } catch {
-    return [];
+    return empty;
   }
 }
 
-export async function getPortfolio(
+// Cache for 60 seconds, revalidated on-demand via updateTag
+export const getPortfoliosPublic = unstable_cache(
+  _getPortfoliosPublic,
+  ["portfolios-public"],
+  { revalidate: 60, tags: ["portfolios"] }
+);
+
+async function _getPortfolio(
   id: string
 ): Promise<PortfolioWithImages | null> {
   try {
@@ -206,6 +225,16 @@ export async function getPortfolio(
     return null;
   }
 }
+
+// React.cache() deduplicates within a single request (metadata + page)
+// unstable_cache() caches across requests for 60 seconds
+export const getPortfolio = cache(
+  (id: string) => unstable_cache(
+    () => _getPortfolio(id),
+    [`portfolio-${id}`],
+    { revalidate: 60, tags: ["portfolios", `portfolio-${id}`] }
+  )()
+);
 
 export async function getPortfoliosPaginated(params: {
   page?: number;
@@ -293,7 +322,7 @@ export async function getPortfolioCount(): Promise<number> {
   }
 }
 
-export async function getFeaturedPortfolios(): Promise<PortfolioWithImages[]> {
+async function _getFeaturedPortfolios(): Promise<PortfolioWithImages[]> {
   try {
     const featured = await db
       .select()
@@ -302,17 +331,33 @@ export async function getFeaturedPortfolios(): Promise<PortfolioWithImages[]> {
       .orderBy(desc(portfolios.createdAt))
       .limit(6);
 
-    const result: PortfolioWithImages[] = [];
-    for (const p of featured) {
-      const images = await db
-        .select()
-        .from(portfolioImages)
-        .where(eq(portfolioImages.portfolioId, p.id))
-        .orderBy(portfolioImages.sortOrder);
-      result.push({ ...p, images });
+    if (featured.length === 0) return [];
+
+    const ids = featured.map((p) => p.id);
+    const allImages = await db
+      .select()
+      .from(portfolioImages)
+      .where(inArray(portfolioImages.portfolioId, ids))
+      .orderBy(portfolioImages.sortOrder);
+
+    const imageMap = new Map<string, typeof allImages>();
+    for (const img of allImages) {
+      const arr = imageMap.get(img.portfolioId) ?? [];
+      arr.push(img);
+      imageMap.set(img.portfolioId, arr);
     }
-    return result;
+
+    return featured.map((p) => ({
+      ...p,
+      images: imageMap.get(p.id) ?? [],
+    }));
   } catch {
     return [];
   }
 }
+
+export const getFeaturedPortfolios = unstable_cache(
+  _getFeaturedPortfolios,
+  ["featured-portfolios"],
+  { revalidate: 60, tags: ["portfolios"] }
+);
