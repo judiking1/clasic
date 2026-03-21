@@ -19,6 +19,8 @@ interface PortfolioItem {
   thumbnailUrl: string;
   isFeatured: boolean;
   createdAt: string;
+  imageCount: number;
+  viewCount: number;
 }
 
 interface PortfolioResponse {
@@ -131,7 +133,13 @@ export function PortfolioListClient() {
             {portfolios.map((portfolio) => (
               <PortfolioCard
                 key={portfolio.id}
-                portfolio={{ ...portfolio, images: [], updatedAt: portfolio.createdAt }}
+                portfolio={{
+                  ...portfolio,
+                  images: [],
+                  updatedAt: portfolio.createdAt,
+                  imageCount: portfolio.imageCount,
+                  viewCount: portfolio.viewCount,
+                }}
                 isAdmin={isAdmin}
               />
             ))}

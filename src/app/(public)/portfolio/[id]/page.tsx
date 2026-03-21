@@ -5,6 +5,7 @@ import { checkIsAdmin } from "@/actions/auth";
 import { ImageCarousel } from "@/components/portfolio/ImageCarousel";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import { PortfolioViewCount } from "@/components/portfolio/PortfolioViewCount";
 
 interface PortfolioDetailPageProps {
   params: Promise<{ id: string }>;
@@ -70,6 +71,7 @@ export default async function PortfolioDetailPage({ params }: PortfolioDetailPag
             <span className="text-xs text-secondary">
               {formatDate(portfolio.createdAt)}
             </span>
+            <PortfolioViewCount portfolioId={portfolio.id} />
           </div>
           <div className="flex items-center gap-4">
             <h1 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl md:text-5xl">

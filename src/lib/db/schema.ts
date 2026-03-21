@@ -58,6 +58,13 @@ export const adminUsers = sqliteTable("admin_users", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// Page views - analytics
+export const pageViews = sqliteTable("page_views", {
+  id: text("id").primaryKey(),
+  page: text("page").notNull(),       // e.g., "/portfolio/abc123", "/", "/samples"
+  viewedAt: text("viewed_at").notNull(),
+});
+
 // Activity logs - audit trail
 export const activityLogs = sqliteTable("activity_logs", {
   id: text("id").primaryKey(),

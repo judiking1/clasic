@@ -5,10 +5,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PORTFOLIO_CATEGORIES } from "@/lib/constants";
 import type { PortfolioWithImages } from "@/types";
-import { cn } from "@/lib/utils";
 
 interface PortfolioCardProps {
-  portfolio: PortfolioWithImages;
+  portfolio: PortfolioWithImages & { imageCount?: number; viewCount?: number };
   isAdmin?: boolean;
 }
 
@@ -47,6 +46,16 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
             {categoryLabel}
           </span>
 
+          {/* Image count badge */}
+          {(portfolio.imageCount ?? 0) > 1 && (
+            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-sm">
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              {portfolio.imageCount}
+            </span>
+          )}
+
           {/* Admin Edit */}
           {isAdmin && (
             <button
@@ -56,7 +65,7 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
                 e.stopPropagation();
                 router.push(`/admin/portfolio/${portfolio.id}/edit`);
               }}
-              className="absolute right-3 top-3 rounded-full bg-accent px-3 py-1 text-[10px] font-semibold text-white shadow-md hover:bg-accent-light transition-colors"
+              className="absolute right-3 top-10 rounded-full bg-accent px-3 py-1 text-[10px] font-semibold text-white shadow-md hover:bg-accent-light transition-colors"
             >
               수정
             </button>
@@ -78,6 +87,16 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
           {portfolio.description && (
             <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-secondary">
               {portfolio.description}
+            </p>
+          )}
+          {/* View count */}
+          {(portfolio.viewCount ?? 0) > 0 && (
+            <p className="mt-2 flex items-center gap-1 text-xs text-secondary/60">
+              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              {portfolio.viewCount?.toLocaleString()}
             </p>
           )}
         </div>

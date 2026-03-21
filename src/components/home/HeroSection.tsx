@@ -1,17 +1,11 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { motion, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useElementScroll } from "@/lib/hooks";
 import MagneticButton from "@/components/ui/MagneticButton";
 import TextScramble from "@/components/ui/TextScramble";
-
-const MarbleHero = dynamic(
-  () => import("@/components/three/MarbleHero"),
-  { ssr: false }
-);
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -46,39 +40,27 @@ export default function HeroSection() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.95]);
-  const marbleY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen w-full overflow-hidden bg-primary"
+      className="relative z-20 min-h-screen w-full overflow-hidden"
     >
-      {/* Ambient light effects */}
-      <div className="absolute inset-0">
-        <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(ellipse_at_30%_20%,rgba(184,149,106,0.12)_0%,transparent_50%)]" />
-        <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(ellipse_at_70%_80%,rgba(184,149,106,0.08)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(10,10,10,0.4)_100%)]" />
+      {/* Subtle ambient glow (no solid bg — starlit shows through) */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(ellipse_at_30%_20%,rgba(184,149,106,0.08)_0%,transparent_50%)]" />
+        <div className="absolute left-0 top-0 h-full w-full bg-[radial-gradient(ellipse_at_70%_80%,rgba(184,149,106,0.05)_0%,transparent_50%)]" />
       </div>
-
-      {/* Subtle grid */}
-      <div
-        className="absolute inset-0 opacity-[0.015]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "120px 120px",
-        }}
-      />
 
       {/* Content container */}
       <motion.div
-        className="relative z-10 flex min-h-screen items-center"
+        className="relative z-30 flex min-h-screen items-center"
         style={{ opacity, scale }}
       >
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid min-h-screen grid-cols-1 items-center gap-4 py-20 sm:gap-8 sm:py-24 lg:grid-cols-2 lg:gap-16">
-            {/* Left: Text content */}
-            <motion.div style={{ y }} className="relative z-10 pt-4 lg:pt-0">
+          <div className="grid min-h-screen grid-cols-1 items-center gap-8 py-20 sm:py-24 lg:grid-cols-5">
+            {/* Left: Text content - takes 3 cols */}
+            <motion.div style={{ y }} className="relative z-10 pt-4 lg:col-span-3 lg:pt-0">
               {/* Badge */}
               <motion.div
                 custom={0.3}
@@ -87,9 +69,9 @@ export default function HeroSection() {
                 animate="visible"
                 className="mb-8"
               >
-                <span className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 backdrop-blur-sm">
+                <span className="glass-premium inline-flex items-center gap-3 rounded-full px-5 py-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-glow" />
-                  <span className="text-[11px] font-medium tracking-[0.3em] text-white/60 uppercase">
+                  <span className="text-[11px] font-medium tracking-[0.3em] text-white/70 uppercase">
                     Premium Artificial Marble
                   </span>
                 </span>
@@ -136,7 +118,7 @@ export default function HeroSection() {
                 variants={fadeUp}
                 initial="hidden"
                 animate="visible"
-                className="mb-10 max-w-md text-base leading-relaxed text-white/40 sm:text-lg"
+                className="mb-10 max-w-lg text-base leading-relaxed text-white/50 sm:text-lg"
               >
                 30년 경력의 장인이 직접 가공하고 시공합니다.
                 <br className="hidden sm:block" />
@@ -180,10 +162,10 @@ export default function HeroSection() {
                     href="/portfolio"
                     className={cn(
                       "group inline-flex items-center justify-center gap-3",
-                      "rounded-full border border-white/15 bg-white/[0.03] px-8 py-4",
-                      "text-sm font-semibold text-white/80 backdrop-blur-sm",
+                      "glass-premium rounded-full px-8 py-4",
+                      "text-sm font-semibold text-white/80",
                       "transition-all duration-700",
-                      "hover:border-accent/40 hover:text-white hover:bg-white/[0.06]"
+                      "hover:border-accent/40 hover:text-white hover:bg-white/[0.08]"
                     )}
                   >
                     시공사례 보기
@@ -199,42 +181,63 @@ export default function HeroSection() {
                   </Link>
                 </MagneticButton>
               </motion.div>
-
-              {/* Trust indicators */}
-              <motion.div
-                custom={1.5}
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                className="mt-12 flex items-center gap-8"
-              >
-                {[
-                  { value: "500+", label: "시공\n완료" },
-                  { value: "30년", label: "전문\n경력" },
-                  { value: "98%", label: "고객\n만족" },
-                ].map((stat, i) => (
-                  <div key={stat.value} className="flex items-center gap-3">
-                    {i > 0 && <div className="mr-5 h-8 w-px bg-white/10" />}
-                    <span className="text-2xl font-bold text-white">{stat.value}</span>
-                    <span className="text-xs text-white/30 leading-tight whitespace-pre">{stat.label}</span>
-                  </div>
-                ))}
-              </motion.div>
             </motion.div>
 
-            {/* Right: 3D Marble Slab */}
+            {/* Right: Glass info panel - takes 2 cols */}
             <motion.div
-              style={{ y: marbleY }}
-              className="relative order-last h-[220px] sm:h-[300px] lg:order-none lg:h-[500px] xl:h-[600px] lg:-mr-16 xl:-mr-24"
+              custom={1.5}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="relative z-10 hidden lg:col-span-2 lg:flex lg:flex-col lg:gap-5"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.8, duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-                className="h-full w-full"
-              >
-                <MarbleHero />
-              </motion.div>
+              {/* Trust stats in glass panels */}
+              {[
+                { value: "500+", label: "시공 완료", desc: "주방, 욕실, 카운터 등" },
+                { value: "30년+", label: "전문 경력", desc: "인조대리석 가공 및 시공" },
+                { value: "98%", label: "고객 만족도", desc: "재시공 의뢰 및 추천" },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.value}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 1.8 + i * 0.15, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  className="glass-premium rounded-2xl px-6 py-5 transition-all duration-500 hover:bg-white/[0.08]"
+                >
+                  <div className="flex items-center gap-5">
+                    <span className="text-3xl font-black text-white tabular-nums">{stat.value}</span>
+                    <div>
+                      <p className="text-sm font-semibold text-white/80">{stat.label}</p>
+                      <p className="text-xs text-white/40">{stat.desc}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Mobile: Trust indicators */}
+            <motion.div
+              custom={1.5}
+              variants={fadeUp}
+              initial="hidden"
+              animate="visible"
+              className="mt-4 lg:hidden"
+            >
+              <div className="glass-premium rounded-2xl p-5">
+                <div className="flex items-center justify-between gap-4">
+                  {[
+                    { value: "500+", label: "시공\n완료" },
+                    { value: "30년", label: "전문\n경력" },
+                    { value: "98%", label: "고객\n만족" },
+                  ].map((stat, i) => (
+                    <div key={stat.value} className="flex items-center gap-3">
+                      {i > 0 && <div className="mr-2 h-8 w-px bg-white/10" />}
+                      <span className="text-xl font-bold text-white">{stat.value}</span>
+                      <span className="text-[11px] text-white/40 leading-tight whitespace-pre">{stat.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -245,22 +248,22 @@ export default function HeroSection() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.5, duration: 1 }}
-        className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 z-30 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
           className="flex flex-col items-center gap-3"
         >
-          <span className="text-[11px] font-light tracking-[0.3em] text-white/25 uppercase">
+          <span className="text-[11px] font-light tracking-[0.3em] text-white/30 uppercase">
             Scroll
           </span>
           <div className="h-12 w-[1px] bg-gradient-to-b from-accent/50 to-transparent" />
         </motion.div>
       </motion.div>
 
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent z-10" />
+      {/* Subtle bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/20 to-transparent z-10" />
     </section>
   );
 }

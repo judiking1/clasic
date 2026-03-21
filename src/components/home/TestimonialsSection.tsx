@@ -31,7 +31,7 @@ export default function TestimonialsSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section className="relative overflow-hidden bg-stone-warm py-32 sm:py-40">
+    <section className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(184,149,106,0.04)_0%,transparent_70%)]" />
 
       <div ref={ref} className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -76,9 +76,9 @@ export default function TestimonialsSection() {
             >
               <TiltCard className="relative h-full" tiltAmount={6} glareOpacity={0.1}>
                 <div className={cn(
-                  "relative h-full rounded-2xl border border-border/40 bg-white p-8 sm:p-10",
+                  "relative h-full rounded-2xl glass-card p-8 sm:p-10",
                   "transition-all duration-700",
-                  "hover:border-accent/20 hover:shadow-lg hover:shadow-accent/[0.03]"
+                  "hover:border-accent/20 hover:shadow-lg hover:shadow-accent/[0.06]"
                 )}>
                   <div className="mb-6 text-5xl leading-none text-accent/20">&ldquo;</div>
 

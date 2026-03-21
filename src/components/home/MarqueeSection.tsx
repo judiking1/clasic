@@ -24,7 +24,7 @@ export default function MarqueeSection() {
   const x2 = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
-    <div ref={ref} className="relative overflow-hidden bg-background py-16 sm:py-20">
+    <div ref={ref} className="relative z-30 overflow-hidden section-unified py-16 sm:py-20">
       {/* Dividers */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 h-px w-[80%] bg-gradient-to-r from-transparent via-border to-transparent" />
 
@@ -33,7 +33,7 @@ export default function MarqueeSection() {
           items={services}
           separator={"  \u2014  "}
           speed={45}
-          className="text-[3rem] sm:text-[4rem] md:text-[5rem] font-black text-primary/[0.06] leading-none select-none"
+          className="text-[3rem] sm:text-[4rem] md:text-[5rem] font-black text-white/[0.06] leading-none select-none"
         />
       </motion.div>
 

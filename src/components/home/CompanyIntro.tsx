@@ -16,15 +16,11 @@ export default function CompanyIntro() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-background py-32 sm:py-40">
-      {/* Floating decorative elements */}
+    <section ref={sectionRef} className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
+      {/* Floating decorative glow */}
       <motion.div
         style={{ y: bgY }}
-        className="absolute -right-20 top-20 h-96 w-96 rounded-full bg-accent/[0.03] blur-3xl"
-      />
-      <motion.div
-        style={{ y: bgY }}
-        className="absolute -left-20 bottom-20 h-72 w-72 rounded-full bg-primary/[0.03] blur-3xl"
+        className="absolute -right-20 top-20 h-96 w-96 rounded-full bg-accent/[0.04] blur-3xl"
       />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -118,14 +114,14 @@ export default function CompanyIntro() {
                   delay: index * 0.15,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="group flex gap-6 rounded-2xl border border-border/40 bg-white p-6 transition-all duration-700 hover:border-accent/20 hover:shadow-lg hover:shadow-accent/[0.03] sm:p-8"
+                className="group flex gap-6 rounded-2xl glass-card p-6 transition-all duration-700 hover:border-accent/20 hover:shadow-lg hover:shadow-accent/[0.06] sm:p-8"
               >
                 {/* Number + icon */}
                 <div className="flex flex-col items-center gap-3">
                   <span className="font-serif text-2xl font-bold text-accent/30">
                     {feature.number}
                   </span>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent transition-colors duration-500 group-hover:bg-accent group-hover:text-white">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15 text-accent transition-colors duration-500 group-hover:bg-accent group-hover:text-white">
                     {feature.icon}
                   </div>
                 </div>

@@ -5,13 +5,14 @@ import Link from "next/link";
 import { motion, useInView } from "framer-motion";
 import { SITE_CONFIG, NAV_ITEMS } from "@/lib/constants";
 import CLSLogo from "@/components/ui/CLSLogo";
+import { VisitorCounter } from "@/components/analytics/VisitorCounter";
 
 export default function Footer() {
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <footer ref={ref} className="relative bg-primary text-white overflow-hidden">
+    <footer ref={ref} className="relative z-30 bg-primary text-white overflow-hidden">
       {/* Top accent line */}
       <motion.div
         initial={{ scaleX: 0 }}
@@ -151,6 +152,7 @@ export default function Footer() {
           <span className="text-xs text-white/20">
             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
           </span>
+          <VisitorCounter />
           <span className="text-xs text-white/20">
             Premium Artificial Marble Specialist
           </span>

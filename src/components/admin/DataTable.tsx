@@ -254,7 +254,7 @@ export default function DataTable<T extends { id: string }>({
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="sticky top-0 z-[1] border-b border-gray-200 bg-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-600">
+          <thead className="sticky top-0 z-[1] border-b border-gray-200 bg-gray-100 text-xs font-semibold uppercase tracking-wide text-gray-600 whitespace-nowrap">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {

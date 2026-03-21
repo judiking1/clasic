@@ -26,22 +26,11 @@ export default function FeaturedPortfolio({ portfolios }: FeaturedPortfolioProps
   if (!portfolios || portfolios.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-primary py-32 sm:py-40">
-      {/* Background decorative */}
-      <motion.div style={{ y: bgY }} className="absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(184,149,106,0.08)_0%,transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(184,149,106,0.05)_0%,transparent_60%)]" />
+    <section ref={sectionRef} className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
+      {/* Subtle glow */}
+      <motion.div style={{ y: bgY }} className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(184,149,106,0.06)_0%,transparent_60%)]" />
       </motion.div>
-
-      {/* Grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.02]"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-          backgroundSize: "80px 80px",
-        }}
-      />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header */}
@@ -75,7 +64,7 @@ export default function FeaturedPortfolio({ portfolios }: FeaturedPortfolioProps
                 href="/portfolio"
                 className={cn(
                   "group inline-flex items-center gap-3",
-                  "rounded-full border border-white/15 px-6 py-3",
+                  "glass-premium rounded-full px-6 py-3",
                   "text-sm font-medium text-white/80",
                   "transition-all duration-500",
                   "hover:border-accent/50 hover:text-white"

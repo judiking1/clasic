@@ -53,7 +53,7 @@ export default function StatsCounter() {
   const lineWidth = useTransform(scrollYProgress, [0.2, 0.5], ["0%", "100%"]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-background py-32 sm:py-40">
+    <section ref={sectionRef} className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(184,149,106,0.04)_0%,transparent_70%)]" />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -93,7 +93,7 @@ export default function StatsCounter() {
           style={{ width: lineWidth }}
         />
 
-        <div className="grid grid-cols-1 gap-16 md:grid-cols-3 md:gap-0">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -105,11 +105,7 @@ export default function StatsCounter() {
                 delay: index * 0.15,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className={cn(
-                "relative text-center",
-                index < stats.length - 1 && "md:border-r md:border-border/60",
-                "md:px-12"
-              )}
+              className="relative text-center glass-card rounded-2xl p-8 md:p-10"
             >
               <div className="text-6xl font-black tracking-tight text-primary sm:text-7xl md:text-8xl">
                 <AnimatedNumber value={stat.value} suffix={stat.suffix} />

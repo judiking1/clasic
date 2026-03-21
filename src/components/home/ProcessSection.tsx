@@ -43,7 +43,7 @@ export default function ProcessSection() {
   const lineProgress = useTransform(scrollYProgress, [0.1, 0.7], ["0%", "100%"]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-cream py-32 sm:py-40">
+    <section ref={sectionRef} className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
       {/* Ambient */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_30%,rgba(184,149,106,0.06)_0%,transparent_50%)]" />
@@ -116,7 +116,7 @@ export default function ProcessSection() {
                 <div className="relative z-10 mb-8 flex items-center gap-4 lg:justify-center">
                   <div className={cn(
                     "flex h-14 w-14 items-center justify-center rounded-full",
-                    "border border-border/60 bg-white",
+                    "glass-card",
                     "transition-all duration-700",
                     "group-hover:border-accent/40 group-hover:bg-accent/10"
                   )}>

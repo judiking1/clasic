@@ -61,7 +61,7 @@ export default function ServicesSection() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-cream py-32 sm:py-40">
+    <section ref={sectionRef} className="relative z-30 overflow-hidden section-unified py-32 sm:py-40">
       <motion.div style={{ y: bgY }} className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(184,149,106,0.06)_0%,transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(184,149,106,0.04)_0%,transparent_60%)]" />
@@ -129,13 +129,13 @@ export default function ServicesSection() {
               >
                 <Link href="/contact" className="group block">
                   <div className={cn(
-                    "relative overflow-hidden rounded-2xl border border-border/60 bg-white p-8",
+                    "relative overflow-hidden rounded-2xl glass-card p-8",
                     "transition-all duration-700",
-                    "hover:border-accent/30 hover:shadow-xl hover:shadow-accent/[0.04]",
+                    "hover:border-accent/30 hover:shadow-xl hover:shadow-accent/[0.06]",
                   )}>
                     <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.02] to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
 
-                    <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-stone-warm text-primary/60 transition-all duration-500 group-hover:bg-accent/10 group-hover:text-accent">
+                    <div className="relative mb-6 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10 text-accent/70 transition-all duration-500 group-hover:bg-accent/20 group-hover:text-accent">
                       {service.icon}
                     </div>
 

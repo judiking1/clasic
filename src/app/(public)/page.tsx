@@ -1,4 +1,5 @@
 import HeroSection from "@/components/home/HeroSection";
+import MarbleScrollCanvas from "@/components/home/MarbleScrollCanvas";
 import MarqueeSection from "@/components/home/MarqueeSection";
 import CompanyIntro from "@/components/home/CompanyIntro";
 import ServicesSection from "@/components/home/ServicesSection";
@@ -13,7 +14,8 @@ export default async function HomePage() {
   const featuredPortfolios = await getFeaturedPortfolios();
 
   return (
-    <main>
+    <main className="relative bg-starlit">
+      <MarbleScrollCanvas />
       <HeroSection />
       <MarqueeSection />
       <CompanyIntro />
