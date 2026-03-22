@@ -83,6 +83,17 @@ export async function updatePortfolio(
   const imageAlts = formData.getAll("imageAlts") as string[];
 
   try {
+    // Fetch old data BEFORE updating so we can diff image URLs
+    const oldImages = await db
+      .select()
+      .from(portfolioImages)
+      .where(eq(portfolioImages.portfolioId, id));
+    const [oldPortfolio] = await db
+      .select({ thumbnailUrl: portfolios.thumbnailUrl })
+      .from(portfolios)
+      .where(eq(portfolios.id, id))
+      .limit(1);
+
     await db
       .update(portfolios)
       .set({
@@ -92,14 +103,22 @@ export async function updatePortfolio(
       })
       .where(eq(portfolios.id, id));
 
-    // Delete old images and insert new
-    const oldImages = await db
-      .select()
-      .from(portfolioImages)
-      .where(eq(portfolioImages.portfolioId, id));
+    // Only delete blobs for URLs that are no longer used
+    const newUrlSet = new Set(imageUrls);
+    if (thumbnailUrl) newUrlSet.add(thumbnailUrl);
+
     for (const img of oldImages) {
-      await deleteImage(img.imageUrl);
+      if (!newUrlSet.has(img.imageUrl)) {
+        await deleteImage(img.imageUrl);
+      }
     }
+
+    // Delete old thumbnailUrl blob if it changed and isn't reused
+    const oldThumb = oldPortfolio?.thumbnailUrl;
+    if (oldThumb && oldThumb !== thumbnailUrl && !newUrlSet.has(oldThumb)) {
+      await deleteImage(oldThumb);
+    }
+
     await db
       .delete(portfolioImages)
       .where(eq(portfolioImages.portfolioId, id));
