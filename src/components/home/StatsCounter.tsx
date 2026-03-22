@@ -13,8 +13,8 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 500, suffix: "+", label: "시공 건수", description: "주방, 욕실, 카운터 등 다양한 공간" },
-  { value: 30, suffix: "년+", label: "전문 경력", description: "인조대리석 가공 및 시공 전문" },
+  { value: 50000, suffix: "+", label: "시공 건수", description: "주방, 욕실, 카운터 등 다양한 공간" },
+  { value: 25, suffix: "년+", label: "전문 경력", description: "인조대리석 가공 및 시공 전문" },
   { value: 98, suffix: "%", label: "고객 만족도", description: "재시공 의뢰 및 추천 비율" },
 ];
 
@@ -30,8 +30,7 @@ function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
       duration: 2.5,
       ease: [0.16, 1, 0.3, 1],
       onUpdate: (latest) => {
-        setDisplayValue(Math.round(latest));
-      },
+        setDisplayValue(Math.round(latest));      },
     });
 
     return () => controls.stop();
@@ -39,7 +38,7 @@ function AnimatedNumber({ value, suffix }: { value: number; suffix: string }) {
 
   return (
     <span ref={ref} className="tabular-nums">
-      {displayValue}
+      {displayValue.toLocaleString()}
       <span className="text-accent">{suffix}</span>
     </span>
   );
@@ -107,7 +106,7 @@ export default function StatsCounter() {
               }}
               className="relative text-center glass-card rounded-2xl p-8 md:p-10"
             >
-              <div className="text-6xl font-black tracking-tight text-primary sm:text-7xl md:text-8xl">
+              <div className="text-4xl font-black tracking-tight text-primary sm:text-5xl md:text-6xl">
                 <AnimatedNumber value={stat.value} suffix={stat.suffix} />
               </div>
               <div className="mt-4 text-base font-semibold text-primary">

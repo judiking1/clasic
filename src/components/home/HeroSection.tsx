@@ -120,7 +120,7 @@ export default function HeroSection() {
                 animate="visible"
                 className="mb-10 max-w-lg text-base leading-relaxed text-white/50 sm:text-lg"
               >
-                30년 경력의 장인이 직접 가공하고 시공합니다.
+                25년 경력의 장인이 직접 가공하고 시공합니다.
                 <br className="hidden sm:block" />
                 정밀한 맞춤 제작으로 고객의 공간에 프리미엄 가치를 더합니다.
               </motion.p>
@@ -193,8 +193,8 @@ export default function HeroSection() {
             >
               {/* Trust stats in glass panels */}
               {[
-                { value: "500+", label: "시공 완료", desc: "주방, 욕실, 카운터 등" },
-                { value: "30년+", label: "전문 경력", desc: "인조대리석 가공 및 시공" },
+                { value: "50,000+", label: "시공 완료", desc: "주방, 욕실, 카운터 등" },
+                { value: "25년+", label: "전문 경력", desc: "인조대리석 가공 및 시공" },
                 { value: "98%", label: "고객 만족도", desc: "재시공 의뢰 및 추천" },
               ].map((stat, i) => (
                 <motion.div
@@ -205,7 +205,7 @@ export default function HeroSection() {
                   className="glass-premium rounded-2xl px-6 py-5 transition-all duration-500 hover:bg-white/[0.08]"
                 >
                   <div className="flex items-center gap-5">
-                    <span className="text-3xl font-black text-white tabular-nums">{stat.value}</span>
+                    <span className="text-2xl font-black text-white tabular-nums">{stat.value}</span>
                     <div>
                       <p className="text-sm font-semibold text-white/80">{stat.label}</p>
                       <p className="text-xs text-white/40">{stat.desc}</p>
@@ -226,13 +226,13 @@ export default function HeroSection() {
               <div className="glass-premium rounded-2xl p-5">
                 <div className="flex items-center justify-between gap-4">
                   {[
-                    { value: "500+", label: "시공\n완료" },
-                    { value: "30년", label: "전문\n경력" },
+                    { value: "50,000+", label: "시공\n완료" },
+                    { value: "25년", label: "전문\n경력" },
                     { value: "98%", label: "고객\n만족" },
                   ].map((stat, i) => (
-                    <div key={stat.value} className="flex items-center gap-3">
-                      {i > 0 && <div className="mr-2 h-8 w-px bg-white/10" />}
-                      <span className="text-xl font-bold text-white">{stat.value}</span>
+                    <div key={stat.value} className="flex items-center gap-2">
+                      {i > 0 && <div className="mr-1 h-8 w-px bg-white/10" />}
+                      <span className="text-base font-bold text-white">{stat.value}</span>
                       <span className="text-[11px] text-white/40 leading-tight whitespace-pre">{stat.label}</span>
                     </div>
                   ))}

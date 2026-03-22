@@ -7,34 +7,34 @@ import { useElementScroll } from "@/lib/hooks";
 
 const milestones = [
   {
-    year: "1996",
+    year: "2000",
     title: "회사 설립",
     description: "인조대리석 가공 및 시공 전문 업체로 출발, 장인 정신으로 시작",
   },
   {
-    year: "2003",
+    year: "2005",
     title: "자체 공장 설립",
     description: "독립 가공 공장 마련, CNC 장비 도입으로 정밀 가공 체계 구축",
   },
   {
-    year: "2008",
-    title: "시공 500건 달성",
+    year: "2010",
+    title: "시공 10,000건 달성",
     description: "주방 싱크대, 세면대, 카운터 등 다양한 시공 경험 축적",
   },
   {
-    year: "2014",
+    year: "2015",
     title: "공장 확장 & 파트너십",
     description: "생산 시설 확장 및 대형 프랜차이즈 인테리어 공식 협력 업체 선정",
   },
   {
     year: "2020",
-    title: "시공 1,500건 돌파",
+    title: "시공 30,000건 돌파",
     description: "고객 만족도 98% 달성, 지역 대표 시공 업체로 성장",
   },
   {
-    year: "2024",
-    title: "디지털 전환",
-    description: "온라인 견적 시스템 도입 및 홈페이지 리뉴얼, 30년 노하우의 새로운 시작",
+    year: "2026",
+    title: "홈페이지 개설",
+    description: "온라인 견적 시스템 도입 및 홈페이지 리뉴얼, 25년 노하우의 새로운 시작",
   },
 ];
 
