@@ -56,8 +56,8 @@ export function PortfolioListClient() {
   const { data, isLoading } = useQuery({
     queryKey: ["public-portfolios", currentCategory, currentPage],
     queryFn: () => fetchPortfolios(currentCategory, currentPage),
-    staleTime: Infinity, // Never refetch unless manually invalidated
-    gcTime: 30 * 60 * 1000, // Keep in cache 30 minutes
+    staleTime: 60_000, // Refetch after 1 minute to pick up admin edits
+    gcTime: 5 * 60 * 1000, // Keep in cache 5 minutes
   });
 
   const handleCategoryChange = (value: string) => {

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     if (total === 0) {
       return NextResponse.json(
         { data: [], total: 0, page, pageSize, totalPages: 0 },
-        { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
+        { headers: { "Cache-Control": "s-maxage=60, stale-while-revalidate=120" } }
       );
     }
 
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(
       { data, total, page, pageSize, totalPages: Math.ceil(total / pageSize) },
-      { headers: { "Cache-Control": "s-maxage=300, stale-while-revalidate=600" } }
+      { headers: { "Cache-Control": "s-maxage=60, stale-while-revalidate=120" } }
     );
   } catch (error) {
     console.error("GET /api/portfolios error:", error);
