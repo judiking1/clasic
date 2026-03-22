@@ -109,10 +109,17 @@ const fragmentShader = `
     float d2=max(dot(N,normalize(vec3(-3,4,-3)-vWorldPos)),0.);
     float fr=pow(1.-max(dot(V,N),0.),4.);
 
-    vec3 lit=col*(.35+d1*.45+d2*.15);
+    // Wrap diffuse for floating fragments to avoid completely dark faces
+    float wrap=0.5;
+    float d1w=max(0.,(dot(N,L1)+wrap)/(1.+wrap));
+    float d2w=max(0.,(dot(N,normalize(vec3(-3,4,-3)-vWorldPos))+wrap)/(1.+wrap));
+    float fd1=mix(d1w,d1,uAssembly);
+    float fd2=mix(d2w,d2,uAssembly);
+
+    vec3 lit=col*(.35+fd1*.45+fd2*.15);
     lit+=s1*vec3(1,.98,.95)*.35;
     lit+=fr*vec3(.95,.92,.88)*.08;
-    lit=mix(lit,lit*vec3(1.02,1,.97),1.-d1);
+    lit=mix(lit,lit*vec3(1.02,1,.97),1.-fd1);
 
     // Gold edge glow on floating fragments
     lit+=(1.-uAssembly)*fr*.8*gold;
@@ -367,6 +374,7 @@ function InstancedFragments({ assemblyRef }: { assemblyRef: React.MutableRefObje
       fragmentShader,
       uniforms: { uTime: { value: 0 }, uAssembly: { value: 0 } },
       transparent: true,
+      depthWrite: true,
     });
     return m;
   }, []);
@@ -434,6 +442,7 @@ function CompleteSlab({ assemblyRef }: { assemblyRef: React.MutableRefObject<num
     fragmentShader: slabFragmentShader,
     uniforms: { uTime: { value: 0 }, uAssembly: { value: 1 }, uSlabOpacity: { value: 0 } },
     transparent: true,
+    depthWrite: true,
   }), []);
   const geo = useMemo(() => new THREE.BoxGeometry(SLAB_W, SLAB_H, SLAB_D, 8, 1, 6), []);
 

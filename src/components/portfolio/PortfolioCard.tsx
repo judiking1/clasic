@@ -41,45 +41,54 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
           {/* Overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-          {/* Category */}
-          <span className="absolute left-3 top-3 rounded-full bg-primary/80 px-3 py-1 text-[10px] font-medium tracking-wider uppercase text-white backdrop-blur-sm">
-            {categoryLabel}
-          </span>
-
-          {/* Image count badge */}
-          {(portfolio.imageCount ?? 0) > 1 && (
-            <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-sm">
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {portfolio.imageCount}
+          {/* Top-left badges */}
+          <div className="absolute left-3 top-3 flex items-center gap-1.5">
+            <span className="rounded-full bg-primary/80 px-3 py-1 text-[10px] font-medium tracking-wider uppercase text-white backdrop-blur-sm">
+              {categoryLabel}
             </span>
-          )}
+            {(portfolio.viewCount ?? 0) > 0 && (
+              <span className="flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-[10px] font-medium text-white/80 backdrop-blur-sm">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                {portfolio.viewCount?.toLocaleString()}
+              </span>
+            )}
+          </div>
 
-          {/* Admin Edit */}
-          {isAdmin && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                router.push(`/admin/portfolio/${portfolio.id}/edit`);
-              }}
-              className="absolute right-3 top-10 rounded-full bg-accent px-3 py-1 text-[10px] font-semibold text-white shadow-md hover:bg-accent-light transition-colors"
-            >
-              수정
-            </button>
-          )}
+          {/* Top-right badges group */}
+          <div className="absolute right-3 top-3 flex flex-col items-end gap-1.5">
+            {(portfolio.imageCount ?? 0) > 1 && (
+              <span className="flex items-center gap-1 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-sm">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                {portfolio.imageCount}
+              </span>
+            )}
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  router.push(`/admin/portfolio/${portfolio.id}/edit`);
+                }}
+                className="rounded-full bg-accent px-3 py-1 text-[10px] font-semibold text-white shadow-md hover:bg-accent-light transition-colors"
+              >
+                수정
+              </button>
+            )}
+          </div>
 
-          {/* View count on thumbnail */}
-          {(portfolio.viewCount ?? 0) > 0 && (
-            <span className="absolute left-3 bottom-3 flex items-center gap-1 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-medium text-white/80 backdrop-blur-sm">
-              <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              {portfolio.viewCount?.toLocaleString()}
-            </span>
+          {/* Description overlay (always visible) */}
+          {portfolio.description && (
+            <div className="absolute inset-x-0 bottom-0 px-4 pb-3 pt-10 bg-gradient-to-t from-black/70 via-black/40 to-transparent">
+              <p className="text-[13px] leading-snug text-white/90 line-clamp-1">
+                {portfolio.description}
+              </p>
+            </div>
           )}
 
           {/* Arrow on hover */}
@@ -91,15 +100,10 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
         </div>
 
         {/* Content */}
-        <div className="p-5">
-          <h3 className="text-base font-bold text-primary transition-colors duration-300 group-hover:text-accent sm:text-lg">
+        <div className="p-4">
+          <h3 className="text-base font-bold text-primary transition-colors duration-300 group-hover:text-accent sm:text-lg line-clamp-1">
             {portfolio.title}
           </h3>
-          {portfolio.description && (
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-secondary">
-              {portfolio.description}
-            </p>
-          )}
         </div>
       </article>
     </Link>
