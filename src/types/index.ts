@@ -66,6 +66,18 @@ export type ActivityLog = {
   createdAt: string;
 };
 
+export type PortfolioListItem = {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  thumbnailUrl: string;
+  isFeatured: boolean;
+  createdAt: string;
+  imageCount: number;
+  viewCount: number;
+};
+
 export type ActionResult = {
   success: boolean;
   error?: string;

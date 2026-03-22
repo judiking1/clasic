@@ -1,7 +1,10 @@
 import { Suspense } from "react";
-import { PortfolioListClient } from "@/components/portfolio/PortfolioListClient";
-import PageHero from "@/components/ui/PageHero";
 import { getPortfoliosPublic } from "@/actions/portfolio";
+import { checkIsAdmin } from "@/actions/auth";
+import PageHero from "@/components/ui/PageHero";
+import { CategoryFilter } from "@/components/portfolio/CategoryFilter";
+import { PortfolioCard } from "@/components/portfolio/PortfolioCard";
+import { Pagination } from "@/components/portfolio/Pagination";
 
 export const metadata = {
   title: "시공사례",
@@ -31,6 +34,52 @@ function PortfolioSkeleton() {
   );
 }
 
+async function PortfolioContent({
+  category,
+  page,
+}: {
+  category: string;
+  page: number;
+}) {
+  const [result, isAdmin] = await Promise.all([
+    getPortfoliosPublic(category, page, 12),
+    checkIsAdmin(),
+  ]);
+
+  const { data: portfolios, totalPages } = result;
+
+  return (
+    <>
+      <CategoryFilter currentCategory={category} />
+
+      {portfolios.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {portfolios.map((portfolio, index) => (
+              <PortfolioCard
+                key={portfolio.id}
+                portfolio={portfolio}
+                isAdmin={isAdmin}
+                priority={index < 3}
+              />
+            ))}
+          </div>
+
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            currentCategory={category}
+          />
+        </>
+      ) : (
+        <div className="py-20 text-center text-secondary">
+          <p className="text-lg">등록된 시공사례가 없습니다.</p>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default async function PortfolioPage({
   searchParams,
 }: {
@@ -39,25 +88,6 @@ export default async function PortfolioPage({
   const params = await searchParams;
   const category = params.category || "all";
   const page = Math.max(1, Number(params.page) || 1);
-
-  const result = await getPortfoliosPublic(category, page, 12);
-  const initialData = {
-    data: result.data.map((p) => ({
-      id: p.id,
-      title: p.title,
-      category: p.category,
-      description: p.description || "",
-      thumbnailUrl: p.thumbnailUrl || "",
-      isFeatured: p.isFeatured ?? false,
-      createdAt: p.createdAt,
-      imageCount: 0,
-      viewCount: 0,
-    })),
-    total: result.total,
-    page: result.page,
-    pageSize: result.pageSize,
-    totalPages: result.totalPages,
-  };
 
   return (
     <main className="min-h-screen bg-background">
@@ -69,7 +99,7 @@ export default async function PortfolioPage({
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <Suspense fallback={<PortfolioSkeleton />}>
-          <PortfolioListClient initialData={initialData} />
+          <PortfolioContent category={category} page={page} />
         </Suspense>
       </section>
     </main>

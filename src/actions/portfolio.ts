@@ -4,12 +4,12 @@ import { cache } from "react";
 import { revalidatePath, unstable_cache } from "next/cache";
 import { updateTag } from "next/cache";
 import { db } from "@/lib/db";
-import { portfolios, portfolioImages } from "@/lib/db/schema";
+import { portfolios, portfolioImages, pageViews } from "@/lib/db/schema";
 import { eq, desc, asc, like, or, and, sql, inArray } from "drizzle-orm";
 import { generateId, getPaginationValues } from "@/lib/utils";
 import { portfolioSchema } from "@/lib/validations/portfolio";
 import { deleteImage } from "./upload";
-import type { ActionResult, PortfolioWithImages, PaginatedResult } from "@/types";
+import type { ActionResult, PortfolioWithImages, PortfolioListItem, PaginatedResult } from "@/types";
 
 export async function createPortfolio(
   formData: FormData
@@ -178,15 +178,14 @@ export async function deletePortfolio(id: string): Promise<ActionResult> {
   }
 }
 
-// Public paginated listing — only returns thumbnailUrl (no images array)
-// to keep response small and cacheable
+// Public paginated listing with imageCount & viewCount
 async function _getPortfoliosPublic(
   category?: string,
   page?: number,
   pageSize?: number
-): Promise<PaginatedResult<PortfolioWithImages>> {
+): Promise<PaginatedResult<PortfolioListItem>> {
   const { page: p, pageSize: ps, offset } = getPaginationValues(page, pageSize);
-  const empty = { data: [], total: 0, page: p, pageSize: ps, totalPages: 0 };
+  const empty: PaginatedResult<PortfolioListItem> = { data: [], total: 0, page: p, pageSize: ps, totalPages: 0 };
 
   try {
     const where = category && category !== "all"
@@ -201,14 +200,55 @@ async function _getPortfoliosPublic(
     if (total === 0) return empty;
 
     const rows = await db
-      .select()
+      .select({
+        id: portfolios.id,
+        title: portfolios.title,
+        category: portfolios.category,
+        description: portfolios.description,
+        thumbnailUrl: portfolios.thumbnailUrl,
+        isFeatured: portfolios.isFeatured,
+        createdAt: portfolios.createdAt,
+      })
       .from(portfolios)
       .where(where)
       .orderBy(desc(portfolios.createdAt))
       .limit(ps)
       .offset(offset);
 
-    const data = rows.map((p) => ({ ...p, images: [] }));
+    const ids = rows.map((r) => r.id);
+
+    // Batch fetch image counts
+    const imageCounts = ids.length > 0
+      ? await db
+          .select({ portfolioId: portfolioImages.portfolioId, count: sql<number>`count(*)` })
+          .from(portfolioImages)
+          .where(inArray(portfolioImages.portfolioId, ids))
+          .groupBy(portfolioImages.portfolioId)
+      : [];
+
+    // Batch fetch view counts (graceful fallback)
+    let viewCounts: { page: string; count: number }[] = [];
+    try {
+      if (ids.length > 0) {
+        viewCounts = await db
+          .select({ page: pageViews.page, count: sql<number>`count(*)` })
+          .from(pageViews)
+          .where(inArray(pageViews.page, ids.map((id) => `/portfolio/${id}`)))
+          .groupBy(pageViews.page);
+      }
+    } catch { /* page_views table may not exist yet */ }
+
+    const imageCountMap = new Map(imageCounts.map((r) => [r.portfolioId, r.count]));
+    const viewCountMap = new Map(viewCounts.map((r) => [r.page.replace("/portfolio/", ""), r.count]));
+
+    const data: PortfolioListItem[] = rows.map((r) => ({
+      ...r,
+      description: r.description || "",
+      thumbnailUrl: r.thumbnailUrl || "",
+      imageCount: imageCountMap.get(r.id) ?? 0,
+      viewCount: viewCountMap.get(r.id) ?? 0,
+    }));
+
     return { data, total, page: p, pageSize: ps, totalPages: Math.ceil(total / ps) };
   } catch {
     return empty;

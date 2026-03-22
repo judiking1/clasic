@@ -1,31 +1,23 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  currentCategory: string;
 }
 
-export function Pagination({ currentPage, totalPages }: PaginationProps) {
-  const searchParams = useSearchParams();
+function buildHref(page: number, category: string) {
+  const params = new URLSearchParams();
+  if (category && category !== "all") params.set("category", category);
+  if (page > 1) params.set("page", String(page));
+  const query = params.toString();
+  return query ? `/portfolio?${query}` : "/portfolio";
+}
 
+export function Pagination({ currentPage, totalPages, currentCategory }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  function buildHref(page: number) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (page <= 1) {
-      params.delete("page");
-    } else {
-      params.set("page", String(page));
-    }
-    const query = params.toString();
-    return query ? `/portfolio?${query}` : "/portfolio";
-  }
-
-  // Show at most 5 page numbers centered around current page
   const maxVisible = 5;
   let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
   const end = Math.min(totalPages, start + maxVisible - 1);
@@ -37,10 +29,9 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
 
   return (
     <nav className="mt-12 flex items-center justify-center gap-1" aria-label="페이지네이션">
-      {/* Previous */}
       {currentPage > 1 ? (
         <Link
-          href={buildHref(currentPage - 1)}
+          href={buildHref(currentPage - 1, currentCategory)}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-secondary transition-colors hover:border-primary/30 hover:text-primary"
           aria-label="이전 페이지"
         >
@@ -56,21 +47,19 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
         </span>
       )}
 
-      {/* First page + ellipsis */}
       {start > 1 && (
         <>
-          <Link href={buildHref(1)} className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-sm text-secondary transition-colors hover:border-primary/30 hover:text-primary">
+          <Link href={buildHref(1, currentCategory)} className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-sm text-secondary transition-colors hover:border-primary/30 hover:text-primary">
             1
           </Link>
           {start > 2 && <span className="px-1 text-secondary">...</span>}
         </>
       )}
 
-      {/* Page numbers */}
       {pages.map((page) => (
         <Link
           key={page}
-          href={buildHref(page)}
+          href={buildHref(page, currentCategory)}
           className={cn(
             "flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-colors",
             page === currentPage
@@ -83,20 +72,18 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
         </Link>
       ))}
 
-      {/* Last page + ellipsis */}
       {end < totalPages && (
         <>
           {end < totalPages - 1 && <span className="px-1 text-secondary">...</span>}
-          <Link href={buildHref(totalPages)} className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-sm text-secondary transition-colors hover:border-primary/30 hover:text-primary">
+          <Link href={buildHref(totalPages, currentCategory)} className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-sm text-secondary transition-colors hover:border-primary/30 hover:text-primary">
             {totalPages}
           </Link>
         </>
       )}
 
-      {/* Next */}
       {currentPage < totalPages ? (
         <Link
-          href={buildHref(currentPage + 1)}
+          href={buildHref(currentPage + 1, currentCategory)}
           className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-secondary transition-colors hover:border-primary/30 hover:text-primary"
           aria-label="다음 페이지"
         >

@@ -423,8 +423,8 @@ function InstancedFragments({ assemblyRef }: { assemblyRef: React.MutableRefObje
       _mat4.compose(_pos, _quat, _scale);
       meshRef.current.setMatrixAt(i, _mat4);
 
-      // Per-instance opacity — fragments vanish quickly, then slab replaces (no overlap)
-      const fragOpacity = 1 - smoothstep(0.76, 0.80, assembly);
+      // Per-instance opacity — fragments fade out gradually, then slab replaces
+      const fragOpacity = 1 - smoothstep(0.65, 0.78, assembly);
       opacityAttr.array[i] = fragOpacity;
     }
 
@@ -456,7 +456,7 @@ function CompleteSlab({ assemblyRef }: { assemblyRef: React.MutableRefObject<num
 
     const assembly = assemblyRef.current;
     // Slab appears right AFTER fragments vanish (no overlap)
-    const slabOpacity = smoothstep(0.80, 0.84, assembly);
+    const slabOpacity = smoothstep(0.78, 0.88, assembly);
     mat.uniforms.uSlabOpacity.value = slabOpacity;
     meshRef.current.visible = slabOpacity > 0.01;
   });
