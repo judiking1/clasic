@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { PortfolioListClient } from "@/components/portfolio/PortfolioListClient";
 import PageHero from "@/components/ui/PageHero";
+import { getPortfoliosPublic } from "@/actions/portfolio";
 
 export const metadata = {
   title: "시공사례",
@@ -30,7 +31,34 @@ function PortfolioSkeleton() {
   );
 }
 
-export default function PortfolioPage() {
+export default async function PortfolioPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; page?: string }>;
+}) {
+  const params = await searchParams;
+  const category = params.category || "all";
+  const page = Math.max(1, Number(params.page) || 1);
+
+  const result = await getPortfoliosPublic(category, page, 12);
+  const initialData = {
+    data: result.data.map((p) => ({
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      description: p.description || "",
+      thumbnailUrl: p.thumbnailUrl || "",
+      isFeatured: p.isFeatured ?? false,
+      createdAt: p.createdAt,
+      imageCount: 0,
+      viewCount: 0,
+    })),
+    total: result.total,
+    page: result.page,
+    pageSize: result.pageSize,
+    totalPages: result.totalPages,
+  };
+
   return (
     <main className="min-h-screen bg-background">
       <PageHero
@@ -41,7 +69,7 @@ export default function PortfolioPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <Suspense fallback={<PortfolioSkeleton />}>
-          <PortfolioListClient />
+          <PortfolioListClient initialData={initialData} />
         </Suspense>
       </section>
     </main>

@@ -9,9 +9,10 @@ import type { PortfolioWithImages } from "@/types";
 interface PortfolioCardProps {
   portfolio: PortfolioWithImages & { imageCount?: number; viewCount?: number };
   isAdmin?: boolean;
+  priority?: boolean;
 }
 
-export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
+export function PortfolioCard({ portfolio, isAdmin, priority }: PortfolioCardProps) {
   const router = useRouter();
   const categoryLabel =
     PORTFOLIO_CATEGORIES.find((c) => c.value === portfolio.category)?.label ||
@@ -27,6 +28,7 @@ export function PortfolioCard({ portfolio, isAdmin }: PortfolioCardProps) {
               src={portfolio.thumbnailUrl}
               alt={portfolio.title}
               fill
+              priority={priority}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-all duration-[1.2s] group-hover:scale-110"
             />

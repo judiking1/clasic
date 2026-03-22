@@ -109,14 +109,18 @@ const fragmentShader = `
     float d2=max(dot(N,normalize(vec3(-3,4,-3)-vWorldPos)),0.);
     float fr=pow(1.-max(dot(V,N),0.),4.);
 
-    // Wrap diffuse for floating fragments to avoid completely dark faces
-    float wrap=0.5;
+    // Wrap diffuse — stronger wrap so back-facing surfaces still receive light
+    float wrap=1.0;
     float d1w=max(0.,(dot(N,L1)+wrap)/(1.+wrap));
     float d2w=max(0.,(dot(N,normalize(vec3(-3,4,-3)-vWorldPos))+wrap)/(1.+wrap));
-    float fd1=mix(d1w,d1,uAssembly);
-    float fd2=mix(d2w,d2,uAssembly);
+    // Use wrap diffuse while fragments are separate, standard when fully assembled
+    float lightBlend=smoothstep(0.85,1.0,uAssembly);
+    float fd1=mix(d1w,d1,lightBlend);
+    float fd2=mix(d2w,d2,lightBlend);
 
-    vec3 lit=col*(.35+fd1*.45+fd2*.15);
+    // Boost ambient as assembly increases — prevents dark inner faces between close fragments
+    float ambient=mix(0.35,0.6,uAssembly);
+    vec3 lit=col*(ambient+fd1*.40+fd2*.12);
     lit+=s1*vec3(1,.98,.95)*.35;
     lit+=fr*vec3(.95,.92,.88)*.08;
     lit=mix(lit,lit*vec3(1.02,1,.97),1.-fd1);
@@ -419,8 +423,8 @@ function InstancedFragments({ assemblyRef }: { assemblyRef: React.MutableRefObje
       _mat4.compose(_pos, _quat, _scale);
       meshRef.current.setMatrixAt(i, _mat4);
 
-      // Per-instance opacity
-      const fragOpacity = assembly > 0.85 ? 1 - smoothstep(0.85, 1.0, assembly) : 1;
+      // Per-instance opacity — fragments vanish quickly, then slab replaces (no overlap)
+      const fragOpacity = 1 - smoothstep(0.76, 0.80, assembly);
       opacityAttr.array[i] = fragOpacity;
     }
 
@@ -451,7 +455,8 @@ function CompleteSlab({ assemblyRef }: { assemblyRef: React.MutableRefObject<num
     mat.uniforms.uTime.value = state.clock.elapsedTime;
 
     const assembly = assemblyRef.current;
-    const slabOpacity = assembly > 0.85 ? smoothstep(0.85, 1.0, assembly) : 0;
+    // Slab appears right AFTER fragments vanish (no overlap)
+    const slabOpacity = smoothstep(0.80, 0.84, assembly);
     mat.uniforms.uSlabOpacity.value = slabOpacity;
     meshRef.current.visible = slabOpacity > 0.01;
   });

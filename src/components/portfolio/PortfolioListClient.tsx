@@ -41,7 +41,11 @@ async function fetchPortfolios(category: string, page: number): Promise<Portfoli
   return res.json();
 }
 
-export function PortfolioListClient() {
+interface Props {
+  initialData?: PortfolioResponse;
+}
+
+export function PortfolioListClient({ initialData }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category") || "all";
@@ -56,8 +60,10 @@ export function PortfolioListClient() {
   const { data, isLoading } = useQuery({
     queryKey: ["public-portfolios", currentCategory, currentPage],
     queryFn: () => fetchPortfolios(currentCategory, currentPage),
-    staleTime: 60_000, // Refetch after 1 minute to pick up admin edits
-    gcTime: 5 * 60 * 1000, // Keep in cache 5 minutes
+    initialData,
+    initialDataUpdatedAt: 0, // Treat server data as stale so counts get fetched in background
+    staleTime: 60_000,
+    gcTime: 5 * 60 * 1000,
   });
 
   const handleCategoryChange = (value: string) => {
@@ -130,7 +136,7 @@ export function PortfolioListClient() {
             transition={{ duration: 0.3 }}
             className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {portfolios.map((portfolio) => (
+            {portfolios.map((portfolio, index) => (
               <PortfolioCard
                 key={portfolio.id}
                 portfolio={{
@@ -141,6 +147,7 @@ export function PortfolioListClient() {
                   viewCount: portfolio.viewCount,
                 }}
                 isAdmin={isAdmin}
+                priority={index < 3}
               />
             ))}
           </motion.div>
