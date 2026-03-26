@@ -4,8 +4,19 @@ import { NaverMap } from "@/components/about/NaverMap";
 import PageHero from "@/components/ui/PageHero";
 
 export const metadata = {
-  title: "문의하기",
-  description: "인조대리석 시공 관련 문의를 남겨주시면 빠르게 답변드리겠습니다.",
+  title: "문의하기 - 인조대리석 시공 견적 무료 상담",
+  description:
+    "인조대리석 싱크대, 세면대, 카운터 시공 견적을 무료로 상담받으세요. 클레식에 문의하시면 빠르게 답변드리겠습니다.",
+  keywords: [
+    "인조대리석 견적",
+    "인조대리석 상담",
+    "싱크대 견적",
+    "세면대 견적",
+    "인조대리석 문의",
+  ],
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

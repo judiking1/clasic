@@ -7,8 +7,20 @@ import { PortfolioCard } from "@/components/portfolio/PortfolioCard";
 import { Pagination } from "@/components/portfolio/Pagination";
 
 export const metadata = {
-  title: "시공사례",
-  description: "클레식의 인조대리석 시공사례를 확인해보세요.",
+  title: "인조대리석 시공사례 - 싱크대·세면대·카운터 맞춤 시공",
+  description:
+    "클레식의 인조대리석 싱크대, 세면대, 카운터 시공사례를 확인해보세요. 주방 상판, 세면대 상판 등 다양한 인조대리석 맞춤 제작 및 시공 포트폴리오를 제공합니다.",
+  keywords: [
+    "인조대리석 시공사례",
+    "싱크대 시공",
+    "세면대 시공",
+    "카운터 시공",
+    "인조대리석 포트폴리오",
+    "맞춤 시공",
+  ],
+  alternates: {
+    canonical: "/portfolio",
+  },
 };
 
 function PortfolioSkeleton() {

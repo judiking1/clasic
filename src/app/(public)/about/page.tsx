@@ -5,8 +5,19 @@ import { SITE_CONFIG } from "@/lib/constants";
 import PageHero from "@/components/ui/PageHero";
 
 export const metadata = {
-  title: "회사소개",
-  description: "클레식 회사 소개 - 인조대리석 가공 및 시공 전문 업체",
+  title: "회사소개 - 인조대리석 가공 및 시공 전문 업체",
+  description:
+    "클레식은 경기도 남양주에 위치한 인조대리석 전문 업체입니다. 싱크대, 세면대, 카운터 등 인조대리석 가공부터 시공까지 원스톱 서비스를 제공합니다.",
+  keywords: [
+    "인조대리석 업체",
+    "인조대리석 전문",
+    "남양주 인조대리석",
+    "인조대리석 가공",
+    "클레식",
+  ],
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

@@ -20,9 +20,46 @@ export async function generateMetadata({ params }: PortfolioDetailPageProps) {
     return { title: "시공사례를 찾을 수 없습니다" };
   }
 
+  const categoryLabel =
+    PORTFOLIO_CATEGORIES.find((c) => c.value === portfolio.category)?.label ||
+    portfolio.category;
+
+  const description =
+    portfolio.description ||
+    `클레식 인조대리석 ${categoryLabel} 시공사례 - ${portfolio.title}. 맞춤 제작부터 시공까지 전문 업체의 작업 과정을 확인하세요.`;
+
+  const ogImage = portfolio.images?.[0]?.imageUrl;
+
   return {
-    title: `${portfolio.title} | 시공사례`,
-    description: portfolio.description || `${portfolio.title} 시공사례 상세 페이지`,
+    title: `${portfolio.title} - 인조대리석 ${categoryLabel} 시공사례`,
+    description,
+    keywords: [
+      "인조대리석",
+      "인조대리석 시공",
+      `인조대리석 ${categoryLabel}`,
+      categoryLabel,
+      "시공사례",
+      "맞춤제작",
+      "클레식",
+    ],
+    openGraph: {
+      title: `${portfolio.title} - 인조대리석 ${categoryLabel} 시공사례 | 클레식`,
+      description,
+      ...(ogImage && {
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: portfolio.title,
+          },
+        ],
+      }),
+      type: "article",
+    },
+    alternates: {
+      canonical: `/portfolio/${id}`,
+    },
   };
 }
 
